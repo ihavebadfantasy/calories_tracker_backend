@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "nodemon --exec 'mocha -R min'",
-    "seed": "node seeder.js"
+    "test": "NODE_ENV=test nodemon --exec 'mocha -R min'",
+    "seed-dev": "NODE_ENV=dev node seeder.js",
+    "seed-test": "NODE_ENV=test node seeder.js",
+    "seed-prod": "NODE_ENV=prod node seeder.js",
+    "dev": "NODE_ENV=dev node index.js"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +17,7 @@
     "@abslibs/mongoose-plugin": "^1.0.7",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mocha": "^8.3.2",
     "mongo-seeding": "^3.6.0",

@@ -6,7 +6,6 @@ describe('Activity', () => {
   it('activity db is seeded',(done) => {
     Activity.find({})
       .then((res) => {
-        console.log(res);
         assert(res.length === activities.length);
         done();
       })

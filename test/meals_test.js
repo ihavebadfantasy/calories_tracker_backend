@@ -15,13 +15,16 @@ describe('Meal', () => {
   })
 
   it('saves a meal', () => {
+    Meal.find({ nutriment: 'apple' }).then((m) => {
+      console.log(m);
+    });
+
     assert(!meal.isNew);
   });
 
   it('updates a meal', (done) => {
     meal.update({ calories: 43 })
       .then(() => {
-        console.log('in them');
         return Meal.findOne({ nutriment: 'apple' });
       })
       .then((res) => {

@@ -1,15 +1,35 @@
+require('dotenv').config();
 const { Seeder } = require('mongo-seeding');
 const path = require('path');
-// TODO: remove to test and initiate a new one for production
+
+let database = 'mongodb://127.0.0.1:27017/';
+
+switch (process.env.NODE_ENV) {
+  case 'test':
+    database += process.env.TEST_DB_NAME;
+    break;
+  case 'prod':
+    database += process.env.PROD_DB_NAME;
+    break;
+  case 'dev':
+    database += process.env.DEV_DB_NAME;
+    break;
+}
+
 const config = {
-  database: 'mongodb://127.0.0.1:27017/calories_tracker_test',
+  database,
   dropDatabase: true,
-  export: 'objectOrArray'
+  export: 'objectOrArray',
 };
 
 const seeder = new Seeder(config);
 
-const collections = seeder.readCollectionsFromPath(path.resolve('./db/seeds'));
+const collections = seeder.readCollectionsFromPath(path.resolve('./db/seeds'), {
+  transformers: [
+    Seeder.Transformers.setCreatedAtTimestamp,
+    Seeder.Transformers.setUpdatedAtTimestamp
+  ]
+});
 
 (async () => {
   try {

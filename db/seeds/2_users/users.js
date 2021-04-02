@@ -10,5 +10,8 @@ module.exports = [
     weight: 47,
     age: 27,
     caloriesPerDay: 1500,
+    averageWeight: 47,
+    averageCaloriesPerDay: 0,
+    averageActivityPerDay: 0,
   },
 ]
