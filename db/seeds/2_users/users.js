@@ -14,4 +14,15 @@ module.exports = [
     averageCaloriesPerDay: 0,
     averageActivityPerDay: 0,
   },
+  {
+    username: 'iamworried',
+    email: 'm@m.com',
+    password: encryptor.hashSync('password02'),
+    weight: 55,
+    age: 66,
+    caloriesPerDay: 5600,
+    averageWeight: 77,
+    averageCaloriesPerDay: 0,
+    averageActivityPerDay: 0,
+  },
 ]

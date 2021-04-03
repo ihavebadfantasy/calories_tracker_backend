@@ -1,6 +1,17 @@
 const User = require('../models/User');
 
 module.exports = {
+  async getAll(req, res) {
+    try {
+      const users = await User.find({});
+      return res.send({
+        data: users,
+      })
+    } catch(err) {
+      console.warn(err);
+    }
+  },
+
   async getOne(req, res) {
     const id = req.params.id;
 
@@ -33,12 +44,23 @@ module.exports = {
       let updatedUser = await User.findOne({ _id: id });
       updatedUser = updatedUser.toObject();
       delete updatedUser.password;
-      console.log(updatedUser);
       res.send({
         data: updatedUser,
       });
     } catch (e) {
       console.warn(err);
     }
+  },
+
+  deleteOne(req, res) {
+    const id = req.params.id;
+
+    User.delete({ _id: id }, (err) => {
+      if (err) {
+        return res.status(400).send();
+      }
+
+      return res.status(202).send();
+    });
   }
 }

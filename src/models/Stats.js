@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const mongoose_plugin = require('@abslibs/mongoose-plugin');
+const mongoose_delete = require('mongoose-delete');
 
 const StatsSchema = new Schema({
   averageWeight: {
@@ -21,9 +21,7 @@ const StatsSchema = new Schema({
   }
 }, { timestamps: true });
 
-StatsSchema.plugin(mongoose_plugin, {
-  paranoid: true
-});
+StatsSchema.plugin(mongoose_delete, { overrideMethods: true });
 
 const Stats = mongoose.model('stats', StatsSchema);
 

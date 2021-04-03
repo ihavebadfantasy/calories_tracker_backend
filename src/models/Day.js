@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const mongoose_plugin = require('@abslibs/mongoose-plugin');
+const mongoose_delete = require('mongoose-delete');
 
 const DaySchema = new Schema({
   caloriesLeft: {
@@ -35,9 +35,7 @@ const DaySchema = new Schema({
   }
 }, { timestamps: true });
 
-DaySchema.plugin(mongoose_plugin, {
-  paranoid: true
-});
+DaySchema.plugin(mongoose_delete, { overrideMethods: true });
 
 const Day = mongoose.model('day', DaySchema);
 

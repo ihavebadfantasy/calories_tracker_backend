@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const mongoose_plugin = require('@abslibs/mongoose-plugin');
+const mongoose_delete = require('mongoose-delete');
 // TODO: fix defaults, check if not available in seeds only or in general
 // TODO: replace age with date of birth
+
 const UserSchema = new Schema({
   username: {
     type: String,
@@ -42,9 +43,7 @@ const UserSchema = new Schema({
   }
 }, { timestamps: true });
 
-UserSchema.plugin(mongoose_plugin, {
-  paranoid: true,
-});
+UserSchema.plugin(mongoose_delete, { overrideMethods: true });
 
 const User = mongoose.model('user', UserSchema);
 

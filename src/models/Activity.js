@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const mongoose_plugin = require('@abslibs/mongoose-plugin');
+const mongoose_delete = require('mongoose-delete');
 
 const ActivitiesSchema = new Schema({
   name: {
@@ -13,9 +13,7 @@ const ActivitiesSchema = new Schema({
   },
 }, { timestamps: true });
 
-ActivitiesSchema.plugin(mongoose_plugin, {
-  paranoid: true,
-});
+ActivitiesSchema.plugin(mongoose_delete, { overrideMethods: true });
 
 const Activity = mongoose.model('activity', ActivitiesSchema);
 

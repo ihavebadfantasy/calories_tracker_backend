@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const mongoose_plugin = require('@abslibs/mongoose-plugin');
+const mongoose_delete = require('mongoose-delete');
 
 const MealSchema = new Schema({
   nutriment: String,
@@ -15,9 +15,7 @@ const MealSchema = new Schema({
   },
 }, { timestamps: true });
 
-MealSchema.plugin(mongoose_plugin, {
-  paranoid: true
-});
+MealSchema.plugin(mongoose_delete, { overrideMethods: true });
 
 const Meal = mongoose.model('meal', MealSchema);
 
