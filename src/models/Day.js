@@ -32,7 +32,7 @@ const DaySchema = new Schema({
   statisticsEnabled: {
     type: Boolean,
     default: true,
-  }
+  },
 }, { timestamps: true });
 
 DaySchema.plugin(mongoose_delete, { overrideMethods: true });

@@ -5,16 +5,16 @@ class Encryptor {
     this.saltRounds = saltRounds || 10;
   }
 
-  async hash(plainText) {
-    return await bcrypt.hash(plainText, this.saltRounds);
+  hash(plainText) {
+    return bcrypt.hash(plainText, this.saltRounds);
   }
 
   hashSync(plainText) {
     return bcrypt.hashSync(plainText, this.saltRounds);
   }
 
-  async compare(plainText, hash) {
-    return await bcrypt.compareSync(plainText, hash);
+  compare(plainText, hash) {
+    return bcrypt.compareSync(plainText, hash);
   }
 
   compareSync(plainText, hash) {

@@ -13,6 +13,7 @@ module.exports = [
     averageWeight: 47,
     averageCaloriesPerDay: 0,
     averageActivityPerDay: 0,
+    isRegistrationComplete: false,
   },
   {
     username: 'iamworried',
@@ -24,5 +25,6 @@ module.exports = [
     averageWeight: 77,
     averageCaloriesPerDay: 0,
     averageActivityPerDay: 0,
+    isRegistrationComplete: false,
   },
 ]

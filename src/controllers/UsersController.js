@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Day = require('../models/Day');
 
 module.exports = {
   async getAll(req, res) {
@@ -29,8 +30,49 @@ module.exports = {
     }
   },
 
+  async createOne(req, res) {
+    const id = req.params.id;
+    const { username, weight, age, caloriesPerDay } = req.body;
+    let user;
+
+      try {
+      await User.findOneAndUpdate({ _id: id }, {
+        username,
+        weight,
+        age,
+        caloriesPerDay,
+        averageWeight: weight,
+        isRegistrationCompleted: true,
+      });
+
+      user = await User.findOne({ _id: id });
+
+      user = user.toObject();
+      delete user.password;
+
+      res.send({
+        data: {
+          user,
+        }
+      });
+    } catch(err) {
+      console.warn(err);
+    } finally {
+      const today = new Day({
+        caloriesLeft: user.caloriesPerDay,
+        userId: user._id
+      });
+
+      today.save()
+        .catch((err => {
+          console.warn(err);
+        }))
+    }
+  },
+
   async updateOne(req, res) {
     const id = req.params.id;
+
     const userProps = {};
     // TODO: add validation
     for (let key in req.body) {

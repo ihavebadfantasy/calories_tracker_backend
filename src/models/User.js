@@ -19,19 +19,19 @@ const UserSchema = new Schema({
   },
   weight: {
     type: Number,
-    required: true,
+    default: null,
   },
   age: {
     type: Number,
-    required: true,
+    default: null,
   },
   caloriesPerDay: {
     type: Number,
-    required: true,
+    default: null,
   },
   averageWeight: {
     type: Number,
-    required: true,
+    default: null,
   },
   averageCaloriesPerDay: {
     type: Number,
@@ -40,10 +40,19 @@ const UserSchema = new Schema({
   averageActivityPerDay: {
     type: Number,
     default: 0,
-  }
+  },
+  isRegistrationComplete: {
+    type: Boolean,
+    default: false,
+  },
 }, { timestamps: true });
 
 UserSchema.plugin(mongoose_delete, { overrideMethods: true });
+
+UserSchema.pre('findOneAndUpdate', function(next) {
+  this.options.runValidators = true;
+  next();
+});
 
 const User = mongoose.model('user', UserSchema);
 
