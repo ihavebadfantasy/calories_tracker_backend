@@ -2,6 +2,7 @@ const User = require('../models/User');
 const Day = require('../models/Day');
 
 module.exports = {
+  // for development purposes
   async getAll(req, res) {
     try {
       const users = await User.find({});
@@ -74,7 +75,6 @@ module.exports = {
     const id = req.params.id;
 
     const userProps = {};
-    // TODO: add validation
     for (let key in req.body) {
       if (key === 'username' || key === 'email' || key === 'weight' || key === 'age') {
         userProps[key] = req.body[key];
@@ -99,7 +99,10 @@ module.exports = {
 
     User.delete({ _id: id }, (err) => {
       if (err) {
-        return res.status(400).send();
+        return res.status(400).send({error: {
+          message: 'Не удалось удалить'
+          }
+        });
       }
 
       return res.status(202).send();

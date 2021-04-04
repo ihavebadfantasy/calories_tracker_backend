@@ -1,4 +1,6 @@
 require('dotenv').config();
+const mongoose = require('mongoose');
+mongoose.set('useFindAndModify', false);
 
 const app = require('./src/app');
 
