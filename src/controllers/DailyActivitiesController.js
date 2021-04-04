@@ -1,5 +1,3 @@
-const endOfDay = require('date-fns/endOfDay');
-const startOfDay = require('date-fns/startOfDay');
 const DailyActivity = require('../models/DailyActivity');
 const Day = require('../models/Day');
 const User = require('../models/User');
