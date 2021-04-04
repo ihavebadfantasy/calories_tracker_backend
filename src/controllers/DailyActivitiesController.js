@@ -5,7 +5,7 @@ const Day = require('../models/Day');
 const User = require('../models/User');
 
 module.exports = {
-  async createOne(req, res) {
+  async createOne(req, res, next) {
     const { calories, userId } = req.body;
 
     const dailyActivityProps = {
@@ -26,6 +26,8 @@ module.exports = {
       const dailyActivity = new DailyActivity(dailyActivityProps);
       await dailyActivity.save();
 
+      console.log(dailyActivity);
+
       // querying today to save daily activity for users's current day
       let today = await Day.findOne({
         createdAt: {
@@ -35,7 +37,6 @@ module.exports = {
         userId
       });
 
-      console.log(today);
       // creating current day if not exists
       if (!today) {
         const user = await User.findOne({ _id: userId });
@@ -64,7 +65,70 @@ module.exports = {
         }
       });
     } catch (err) {
-      console.warn(err);
+      next(new Error('Не удалось сохранить. Попробуйте перезагрузить страницу и попробовать еще раз'));
+    }
+  },
+
+  async updateOne(req, res, next) {
+    let updatedDailyActivity;
+
+    const activityId = req.params.id;
+
+    const { userId } = req.body;
+
+    const dailyActivityProps = {
+      userId,
+    };
+
+    let isCaloriesUpdated = false;
+
+    // adding optional properties
+    if (req.body.name) {
+      dailyActivityProps.name = req.body.name;
+    }
+    if (req.body.duration) {
+      dailyActivityProps.duration = req.body.duration;
+    }
+    if (req.body.calories) {
+      dailyActivityProps.calories = req.body.calories;
+      isCaloriesUpdated = true;
+    }
+
+    try {
+      // just update the dailyActivity props
+      if (!isCaloriesUpdated) {
+        await DailyActivity.findOneAndUpdate({ _id: activityId }, dailyActivityProps);
+      } else {
+        // calories were updated for dailyActivity so need to update the Day also
+        const dailyActivity = await DailyActivity.findOne({ _id: activityId });
+        const prevActivityCalories = dailyActivity.calories;
+
+        const today = await Day.findOne({
+          createdAt: {
+            $gte: startOfDay(new Date()),
+            $lte: endOfDay(new Date()),
+          },
+          userId
+        });
+
+        const newCaloriesLeft = today.caloriesLeft - prevActivityCalories + dailyActivityProps.calories;
+
+        const activityUpdate = dailyActivity.update(dailyActivityProps);
+        const dayUpdate = today.update({
+          caloriesLeft: newCaloriesLeft,
+        });
+        await Promise.all([activityUpdate, dayUpdate]);
+      }
+
+      updatedDailyActivity = await DailyActivity.findOne({ _id: activityId });
+
+      res.send({
+        data: {
+          dailyActivity: updatedDailyActivity,
+        }
+      });
+    } catch (err) {
+      next(new Error('Не удалось обновить. Попробуйте перезагрузить страницу и попробовать еще раз'));
     }
   }
 };

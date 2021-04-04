@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const routes = require('./routes');
+const generalErrorHandler = require('./middleware/generalErrorHandler');
 
 switch (process.env.NODE_ENV) {
   case 'test':
@@ -20,5 +21,7 @@ const app = express();
 app.use(bodyParser.json());
 
 routes(app);
+
+app.use(generalErrorHandler);
 
 module.exports = app;
