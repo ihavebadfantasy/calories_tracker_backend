@@ -3,6 +3,7 @@ const startOfDay = require('date-fns/startOfDay');
 const DailyActivity = require('../models/DailyActivity');
 const Day = require('../models/Day');
 const User = require('../models/User');
+const loadTodayForUser = require('../helpers/loadTodayForUser');
 
 module.exports = {
   async createOne(req, res, next) {
@@ -26,16 +27,7 @@ module.exports = {
       const dailyActivity = new DailyActivity(dailyActivityProps);
       await dailyActivity.save();
 
-      console.log(dailyActivity);
-
-      // querying today to save daily activity for users's current day
-      let today = await Day.findOne({
-        createdAt: {
-          $gte: startOfDay(new Date()),
-          $lte: endOfDay(new Date()),
-        },
-        userId
-      });
+      let today = await loadTodayForUser(userId);
 
       // creating current day if not exists
       if (!today) {
@@ -103,13 +95,7 @@ module.exports = {
         const dailyActivity = await DailyActivity.findOne({ _id: activityId });
         const prevActivityCalories = dailyActivity.calories;
 
-        const today = await Day.findOne({
-          createdAt: {
-            $gte: startOfDay(new Date()),
-            $lte: endOfDay(new Date()),
-          },
-          userId
-        });
+        const today = await loadTodayForUser('userId');
 
         const newCaloriesLeft = today.caloriesLeft - prevActivityCalories + dailyActivityProps.calories;
 
@@ -129,6 +115,42 @@ module.exports = {
       });
     } catch (err) {
       next(new Error('Не удалось обновить. Попробуйте перезагрузить страницу и попробовать еще раз'));
+    }
+  },
+
+  async deleteOne(req, res, next) {
+    const activityId = req.params.id;
+
+    try {
+      // loading dailyActivity to get userId
+      const dailyActivity = await DailyActivity.findOne({ _id: activityId });
+
+      if (!dailyActivity) {
+        throw new Error();
+      }
+
+      // loading Day to remove dailyActivity from it
+      let today = await loadTodayForUser(dailyActivity.userId);
+
+      if (!today) {
+        throw new Error();
+      }
+
+      await today.update({
+        caloriesLeft: today.caloriesLeft - dailyActivity.calories,
+        $pull: { dailyActivities: activityId }
+      });
+
+      // deleting daily activity itself
+      DailyActivity.delete({ _id: activityId }, (err) => {
+        if (err) {
+          next(new Error('Не удалось удалить'));
+        }
+
+        res.status(204).send();
+      });
+    } catch (err) {
+      next(new Error('Не удалось удалить'));
     }
   }
 };

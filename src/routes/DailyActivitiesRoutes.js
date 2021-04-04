@@ -17,4 +17,8 @@ module.exports = (app) => {
     validate(dailyActivityUpdateValidation),
     DailyActivitiesController.updateOne
   );
+  app.delete(
+    '/api/daily-activities/:id',
+    DailyActivitiesController.deleteOne
+  );
 }
