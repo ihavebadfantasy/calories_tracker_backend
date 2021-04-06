@@ -6,18 +6,18 @@ const idCheck = require('../middleware/validation/idCheck');
 module.exports = (app) => {
   app.get(
     '/api/days',
-    jwt({
-      secret: process.env.JWT_SECRET,
-      algorithms: [process.env.JWT_ALGHORITMS],
-    }),
+    // jwt({
+    //   secret: process.env.JWT_SECRET,
+    //   algorithms: [process.env.JWT_ALGHORITMS],
+    // }),
     DaysController.getAll
   );
   app.get(
     '/api/days/:id',
-    jwt({
-      secret: process.env.JWT_SECRET,
-      algorithms: [process.env.JWT_ALGHORITMS],
-    }),
+    // jwt({
+    //   secret: process.env.JWT_SECRET,
+    //   algorithms: [process.env.JWT_ALGHORITMS],
+    // }),
     DaysController.getOne
   );
   app.put('/api/days/:id',

@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const jwt = require('express-jwt');
 const routes = require('./routes');
 const generalErrorHandler = require('./middleware/generalErrorHandler');
 
@@ -19,6 +20,17 @@ switch (process.env.NODE_ENV) {
 const app = express();
 
 app.use(bodyParser.json());
+app.use(jwt({
+  secret: process.env.JWT_SECRET,
+  algorithms: [process.env.JWT_ALGHORITMS],
+})
+  .unless({
+    path: [
+      '/api/auth/login',
+      '/api/auth/register'
+    ]
+  })
+);
 
 routes(app);
 
