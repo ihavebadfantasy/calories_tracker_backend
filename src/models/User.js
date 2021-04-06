@@ -1,8 +1,22 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const mongoose_delete = require('mongoose-delete');
-// TODO: fix defaults, check if not available in seeds only or in general
 // TODO: replace age with date of birth
+
+const StatsSchema = {
+  averageWeight: {
+    type: Number,
+    default: null,
+  },
+  averageCaloriesPerDay: {
+    type: Number,
+    default: 0,
+  },
+  averageActivityPerDay: {
+    type: Number,
+    default: 0,
+  },
+}
 
 const UserSchema = new Schema({
   username: {
@@ -29,18 +43,19 @@ const UserSchema = new Schema({
     type: Number,
     default: null,
   },
-  averageWeight: {
-    type: Number,
-    default: null,
-  },
-  averageCaloriesPerDay: {
-    type: Number,
-    default: 0,
-  },
-  averageActivityPerDay: {
-    type: Number,
-    default: 0,
-  },
+  stats: StatsSchema,
+  // averageWeight: {
+  //   type: Number,
+  //   default: null,
+  // },
+  // averageCaloriesPerDay: {
+  //   type: Number,
+  //   default: 0,
+  // },
+  // averageActivityPerDay: {
+  //   type: Number,
+  //   default: 0,
+  // },
   isRegistrationComplete: {
     type: Boolean,
     default: false,
