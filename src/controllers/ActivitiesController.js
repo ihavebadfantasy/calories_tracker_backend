@@ -1,7 +1,7 @@
 const Activity = require('../models/Activity');
 
 module.exports = {
-  async getAll(req, res) {
+  async getAll(req, res, next) {
     try {
       const activities = await Activity.find();
 
@@ -11,7 +11,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      console.log(err);
+      next(new Error('не удалось загрузить виды физической активности. Попробуйте перезагрузить страницу'));
     }
   }
 }

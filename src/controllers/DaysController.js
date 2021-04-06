@@ -42,7 +42,7 @@ module.exports = {
 
     const dayProps = {};
     let statisticsEnabledChanged = false;
-    const userId = req.body.userId;
+    const userId = req.user.user;
 
     if (req.body.caloriesLeft) {
       dayProps.caloriesLeft = req.body.caloriesLeft;

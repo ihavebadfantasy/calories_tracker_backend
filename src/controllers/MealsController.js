@@ -5,7 +5,8 @@ const loadTodayForUser = require('../helpers/loadTodayForUser');
 
 module.exports = {
   async createOne(req, res, next) {
-    const { calories, userId } = req.body;
+    const userId = req.user.id;
+    const { calories } = req.body;
 
     const mealProps = {
       calories,
@@ -61,7 +62,7 @@ module.exports = {
 
     const mealId = req.params.id;
 
-    const { userId } = req.body;
+    const userId = req.user.id;
 
     const mealProps = {
       userId,
