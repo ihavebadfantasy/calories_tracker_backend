@@ -3,18 +3,6 @@ const Day = require('../models/Day');
 const loadTodayForUser = require('../helpers/loadTodayForUser');
 
 module.exports = {
-  // for development purposes
-  async getAll(req, res, next) {
-    try {
-      const users = await User.find({});
-      return res.send({
-        data: users,
-      })
-    } catch(err) {
-      console.warn(err);
-    }
-  },
-
   async getOne(req, res) {
     const { id } = req.user;
 
@@ -50,7 +38,7 @@ module.exports = {
         age,
         caloriesPerDay,
         stats,
-        isRegistrationCompleted: true,
+        isRegistrationComplete: true,
       });
 
       user = await User.findOne({ _id: id });

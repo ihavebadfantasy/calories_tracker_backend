@@ -42,11 +42,7 @@ module.exports = {
 
     const dayProps = {};
     let statisticsEnabledChanged = false;
-    const userId = req.user.user;
-
-    if (req.body.caloriesLeft) {
-      dayProps.caloriesLeft = req.body.caloriesLeft;
-    }
+    const { id: userId } = req.user;
 
     if (req.body.weight) {
       dayProps.weight = req.body.weight;
@@ -60,7 +56,11 @@ module.exports = {
     try {
       // just a simple Day update
       if (!statisticsEnabledChanged) {
-        await Day.findOneAndUpdate({ _id: dayId }, dayProps);
+        const day = await Day.findOneAndUpdate({ _id: dayId }, dayProps);
+
+        if (!day) {
+          throw new Error();
+        }
 
         const updatedDay = await Day.findOne({ _id: dayId });
 

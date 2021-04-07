@@ -25,6 +25,8 @@
     "mocha": "^8.3.2",
     "mongo-seeding": "^3.6.0",
     "mongoose": "^5.12.3",
-    "mongoose-delete": "^0.5.3"
+    "mongoose-delete": "^0.5.3",
+    "node-schedule": "^2.0.0",
+    "serialize-error": "^8.0.1"
   }
 }

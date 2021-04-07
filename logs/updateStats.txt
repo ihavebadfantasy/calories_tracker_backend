@@ -1,0 +1,19 @@
+Logging started at 4/7/2021, 1:06:16 PM
+ 
+Log from: 4/7/2021, 1:07:00 PM 
+ {}
+ 
+Log from: 4/7/2021, 1:12:00 PM 
+ {"name":"Error","message":"","stack":"Error\n    at Job.module.exports [as job] (/Users/dariamorgendorfer/Desktop/calories-tracker/backend/src/tracker/updateUserStats.js:3:9)\n    at Job.invoke (/Users/dariamorgendorfer/Desktop/calories-tracker/backend/node_modules/node-schedule/lib/Job.js:168:15)\n    at /Users/dariamorgendorfer/Desktop/calories-tracker/backend/node_modules/node-schedule/lib/Invocation.js:268:28\n    at Timeout._onTimeout (/Users/dariamorgendorfer/Desktop/calories-tracker/backend/node_modules/node-schedule/lib/Invocation.js:228:7)\n    at listOnTimeout (internal/timers.js:551:17)\n    at processTimers (internal/timers.js:494:7)"}
+ 
+ 
+Log from: 4/7/2021, 1:27:00 PM 
+ 
+ Message:  
+ Stack: Error
+    at Job.module.exports [as job] (/Users/dariamorgendorfer/Desktop/calories-tracker/backend/src/tracker/updateUserStats.js:3:9)
+    at Job.invoke (/Users/dariamorgendorfer/Desktop/calories-tracker/backend/node_modules/node-schedule/lib/Job.js:168:15)
+    at /Users/dariamorgendorfer/Desktop/calories-tracker/backend/node_modules/node-schedule/lib/Invocation.js:268:28
+    at Timeout._onTimeout (/Users/dariamorgendorfer/Desktop/calories-tracker/backend/node_modules/node-schedule/lib/Invocation.js:228:7)
+    at listOnTimeout (internal/timers.js:551:17)
+    at processTimers (internal/timers.js:494:7)

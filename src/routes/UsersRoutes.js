@@ -4,8 +4,7 @@ const createUserValidations = require('../middleware/validation/createUserValida
 
 module.exports = (app) => {
   app.get('/api/users', UsersController.getOne);
-  app.get('/api/users', UsersController.getAll);
   app.put('/api/users', UsersController.updateOne);
   app.post('/api/users', validate(createUserValidations), UsersController.createOne);
-  app.delete('/api/users', UsersController.deleteOne);
+  // app.delete('/api/users', UsersController.deleteOne);
 }
