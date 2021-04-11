@@ -14,6 +14,7 @@ const DaySchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'user',
+    index: true,
   },
   meals: {
     type: [{
@@ -34,6 +35,8 @@ const DaySchema = new Schema({
     default: true,
   },
 }, { timestamps: true });
+
+DaySchema.index({"createdAt": 1});
 
 DaySchema.plugin(mongoose_delete, { overrideMethods: true });
 

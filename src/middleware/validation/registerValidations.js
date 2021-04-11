@@ -6,7 +6,7 @@ module.exports = [
     .normalizeEmail()
     .isEmail()
     .withMessage((value, { req }) => {
-      return req.t('errors.validation.emailRequiresCheck');
+      return req.t('errors.validation.emailRequiredCheck');
     })
     .custom(async (value, { req }) => {
       const user = await User.findOne({ email: value });
