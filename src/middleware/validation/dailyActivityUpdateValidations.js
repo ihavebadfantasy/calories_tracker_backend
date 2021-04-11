@@ -4,12 +4,12 @@ const numberCheck = require('./numberCheck');
 module.exports = [
   check('calories')
     .optional()
-    .custom((value) => {
-      return numberCheck(value, 'Количество калорий должно быть числом')
+    .custom((value, { req }) => {
+      return numberCheck(value, req.t('errors.validation.caloriesNumberCheck'));
     }),
   check('duration')
     .optional()
-    .custom((value) => {
-      return numberCheck(value, 'Продолжительность должна быть количеством минут')
+    .custom((value, { req }) => {
+      return numberCheck(value, req.t('errors.validation.caloriesNumberCheck'));
     }),
 ];

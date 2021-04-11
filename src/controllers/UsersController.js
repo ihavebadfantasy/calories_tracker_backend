@@ -18,7 +18,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      next(new Error('Не удалось загрузить профиль пользователя. Перезагрузите страницу и попробуйте еще раз'));
+      next(new Error(req.t('errors.response.userProfileErr')));
     }
   },
 
@@ -52,7 +52,7 @@ module.exports = {
         }
       });
     } catch(err) {
-      next(new Error('Не удалось создать профиль пользователя. Перезагрузите страницу и попробуйте еще раз'));
+      next(new Error(req.t('errors.response.userProfileSaveErr')));
     }
   },
 
@@ -104,7 +104,7 @@ module.exports = {
         data: updatedUser,
       });
     } catch (err) {
-      next(new Error('Не удалось обновить. Перезагрузите страницу и попробуйте снова'));
+      next(new Error(req.t('errors.response.updateErr')));
     }
   },
 

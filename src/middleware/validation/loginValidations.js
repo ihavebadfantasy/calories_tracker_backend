@@ -4,8 +4,12 @@ module.exports = [
   check('email')
     .normalizeEmail()
     .isEmail()
-    .withMessage('Email обязателен к заполнению и должен быть настоящим email-адресом'),
+    .withMessage((value, { req }) => {
+      return req.t('errors.validation.emailRequiresCheck');
+    }),
   check('password')
     .notEmpty()
-    .withMessage('Пароль обязателен'),
+    .withMessage((value, { req }) => {
+      return req.t('errors.validation.passwordRequiredCheck');
+    }),
 ];

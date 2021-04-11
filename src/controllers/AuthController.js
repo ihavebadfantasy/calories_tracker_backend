@@ -22,7 +22,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      next(new Error('Не удалось зарегестрировать. Обновите страницу и попробуйте еще раз'));
+      next(new Error(req.t('errors.response.registrationErr')));
     }
   },
 
@@ -33,13 +33,13 @@ module.exports = {
       const user = await User.findOne({ email });
 
       if (!user) {
-        next(new Error('Пользователя с таким email не существует'));
+        next(new Error(req.t('errors.response.loginEmailErr')));
       }
 
       const isRightPassword = encryptor.compare(password, user.password);
 
       if (!isRightPassword) {
-        next(new Error('Неверный пароль'));
+        next(new Error(req.t('errors.response.loginPasswordErr')));
       }
 
       const accessToken = generateAccessToken(user);
@@ -49,7 +49,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      next(new Error('Не удалось авторизоваться. Обновите страницу и попробуйте снова'));
+      next(new Error(req.t('errors.response.loginErr')));
     }
   }
 };

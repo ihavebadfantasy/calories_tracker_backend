@@ -4,23 +4,19 @@ const numberCheck = require('./numberCheck');
 module.exports = [
   check('username')
     .notEmpty()
-    .withMessage('Введите имя или никнейм'),
+    .withMessage((value, { req }) => {
+      return req.t('errors.validation.usernameRequiredCheck');
+    }),
   check('weight')
-    .notEmpty()
-    .withMessage('Укажите свой вес')
-    .custom((value) => {
-      return numberCheck(value, 'Вес должен быть числом');
+    .custom((value, { req }) => {
+      return numberCheck(value, req.t('errors.validation.weightNumberCheck'));
     }),
   check('age')
-    .notEmpty()
-    .withMessage('Укажите свой возраст')
-    .custom((value) => {
-      return numberCheck(value, 'Возраст должен быть числом');
+    .custom((value, { req }) => {
+      return numberCheck(value, req.t('errors.validation.ageNumberCheck'));
     }),
   check('caloriesPerDay')
-    .notEmpty()
-    .withMessage('Укажите дневную норму калорий')
-    .custom((value) => {
-      return numberCheck(value, 'Дневная норма каллорий должны быть числом быть числом');
+    .custom((value, { req }) => {
+      return numberCheck(value, req.t('errors.validation.caloriesPerDayNumberCheck'));
     }),
 ];

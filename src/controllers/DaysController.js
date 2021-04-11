@@ -15,7 +15,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      next(new Error('Не получилось загрузить дни. Попробуйте перегрузить страницу'))
+      next(new Error(req.t('errors.response.daysLoadErr')))
     }
   },
 
@@ -33,7 +33,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      next(new Error('Не получилось загрузить день. Попробуйте перегрузить страницу'));
+      next(new Error(req.t('errors.response.dayLoadErr')));
     }
   },
 
@@ -73,7 +73,7 @@ module.exports = {
 
       // if statisticsEnabled flag has been changed need also to re-count stats for user
     } catch (err) {
-      next(new Error('Не удалось обновить. Перезагрузите страницу и поппробуйте снова'));
+      next(new Error(req.t('errors.response.uploadErr')));
     }
   },
 

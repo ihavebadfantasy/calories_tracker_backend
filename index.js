@@ -13,7 +13,6 @@ userStatsUpdateJob.on('error', (err) => {
   updateStatsJobLogger.errorLog(err);
 });
 
-
 app.listen(process.env.PORT, () => {
   console.log('Running on port 3050');
 });

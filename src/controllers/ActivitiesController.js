@@ -11,7 +11,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      next(new Error('не удалось загрузить виды физической активности. Попробуйте перезагрузить страницу'));
+      next(new Error(req.t('errors.response.activitiesLoadErr')));
     }
   }
 }

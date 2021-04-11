@@ -4,7 +4,7 @@ const numberCheck = require('./numberCheck');
 module.exports = [
   check('calories')
     .optional()
-    .custom((value) => {
-      return numberCheck(value, 'Укажите количество калорий числом')
+    .custom((value, { req }) => {
+      return numberCheck(value, req.t('errors.validation.caloriesNumberCheck'))
     }),
 ];

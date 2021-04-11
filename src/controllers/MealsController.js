@@ -53,7 +53,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      next(new Error('Не удалось сохранить. Попробуйте перезагрузить страницу и попробовать еще раз'));
+      next(new Error(req.t('errors.response.saveErr')));
     }
   },
 
@@ -107,8 +107,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      console.warn(err);
-      // next(new Error('Не удалось обновить. Попробуйте перезагрузить страницу и попробовать еще раз'));
+      next(new Error(req.t('errors.response.updateErr')));
     }
   },
 
@@ -138,13 +137,13 @@ module.exports = {
       // deleting meal itself
       Meal.delete({ _id: mealId }, (err) => {
         if (err) {
-          next(new Error('Не удалось удалить'));
+          throw new Error();
         }
 
         res.status(204).send();
       });
     } catch (err) {
-      next(new Error('Не удалось удалить'));
+      next(new Error(req.t('errors.response.deleteErr')));
     }
   }
 };

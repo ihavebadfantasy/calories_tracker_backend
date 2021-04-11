@@ -3,19 +3,25 @@ const numberCheck = require('./numberCheck');
 
 module.exports = [
   check('email')
+    .optional()
     .normalizeEmail()
     .isEmail()
-    .withMessage('Почта должна быть настоящим email-адресом'),
+    .withMessage((value, { req }) => {
+      return req.t('errors.validation.emailFormatCheck');
+    }),
   check('weight')
-    .custom((value) => {
-      return numberCheck(value, 'Вес должен быть числом');
+    .optional()
+    .custom((value, { req }) => {
+      return numberCheck(value, req.t('errors.validation.weightNumberCheck'));
     }),
   check('age')
-    .custom((value) => {
-      return numberCheck(value, 'Возраст должен быть числом');
+    .optional()
+    .custom((value, { req }) => {
+      return numberCheck(value, req.t('errors.validation.ageNumberCheck'));
     }),
   check('caloriesPerDay')
-    .custom((value) => {
-      return numberCheck(value, 'Дневная норма каллорий должны быть числом быть числом');
+    .optional()
+    .custom((value, { req }) => {
+      return numberCheck(value, req.t('errors.validation.caloriesPerDayCheck'));
     }),
 ];

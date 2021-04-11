@@ -3,7 +3,8 @@ const numberCheck = require('./numberCheck');
 
 module.exports = [
   check('weight')
-    .custom((value) => {
-      return numberCheck(value, 'Укажите вес числом')
+    .optional()
+    .custom((value, { req }) => {
+      return numberCheck(value, req.t('errors.weightNumberCheck'));
     }),
 ];

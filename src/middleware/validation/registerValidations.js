@@ -5,24 +5,28 @@ module.exports = [
   check('email')
     .normalizeEmail()
     .isEmail()
-    .withMessage('Email обязателен к заполнению и должен быть настоящим email-адресом')
-    .custom(async (value) => {
+    .withMessage((value, { req }) => {
+      return req.t('errors.validation.emailRequiresCheck');
+    })
+    .custom(async (value, { req }) => {
       const user = await User.findOne({ email: value });
       if (user) {
-        throw new Error('Пользователем с такой почтой уже сущестует');
+        throw new Error(req.t('errors.validation.passwordUniqueCheck'));
       } else {
         return true;
       }
     }),
   check('password')
     .isLength({ min: 5 })
-    .withMessage('Пароль должен содержать минимум 5 символов'),
+    .withMessage((value, { req }) => {
+      return req.t('errors.validation.passwordLengthValidation');
+    }),
   check('passwordConfirmation')
     .custom((value, { req }) => {
       if(value !== req.body.password) {
-        throw new Error('Подтверждение пароля обязательно и должно совпадать с паролем');
+        throw new Error(req.t('errors.validation.passwordConfirmationRequiredValidation'));
       } else {
         return true;
       }
-    })
+    }),
 ];

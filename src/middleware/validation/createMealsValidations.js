@@ -3,9 +3,7 @@ const numberCheck = require('./numberCheck');
 
 module.exports = [
   check('calories')
-    .notEmpty()
-    .withMessage('Укажите количество калорий')
-    .custom((value) => {
-      return numberCheck(value, 'Укажите количество калорий числом')
+    .custom((value, { req }) => {
+      return numberCheck(value, req.t('errors.validation.caloriesNumberCheck'))
     }),
 ];
