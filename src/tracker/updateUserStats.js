@@ -1,9 +1,13 @@
+const startOfDay = require('date-fns/startOfDay');
 const Day = require('../models/Day');
 
 module.exports = async (user) => {
   const days = await Day.find({
     userId: user._id,
     statisticsEnabled: true,
+    createdAt: {
+      $lte: startOfDay(new Date()),
+    },
   })
     .populate(['meals', 'dailyActivities']);
 

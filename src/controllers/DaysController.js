@@ -1,4 +1,6 @@
 const Day = require('../models/Day');
+const User = require('../models/User');
+const updateUserStats = require('../tracker/updateUserStats');
 
 module.exports = {
   async getAll(req, res, next) {
@@ -47,31 +49,38 @@ module.exports = {
     if (req.body.weight) {
       dayProps.weight = req.body.weight;
     }
-
-    if (req.body.statisticsEnabled) {
+    console.log(req.body);
+    if ('statisticsEnabled' in req.body) {
       dayProps.statisticsEnabled = req.body.statisticsEnabled;
       statisticsEnabledChanged = true;
     }
 
     try {
       // just a simple Day update
-      if (!statisticsEnabledChanged) {
-        const day = await Day.findOneAndUpdate({ _id: dayId }, dayProps);
+      const day = await Day.findOneAndUpdate({ _id: dayId }, dayProps);
 
-        if (!day) {
-          throw new Error();
-        }
-
-        const updatedDay = await Day.findOne({ _id: dayId });
-
-        res.send({
-          data: {
-            day: updatedDay,
-          }
-        });
+      if (!day) {
+        throw new Error();
       }
 
       // if statisticsEnabled flag has been changed need also to re-count stats for user
+      if (statisticsEnabledChanged) {
+        const user = await User.findOne({ _id: userId });
+        if (!user) {
+          throw new Error();
+        }
+
+        await updateUserStats(user);
+      }
+
+      const updatedDay = await Day.findOne({ _id: dayId });
+
+      res.send({
+        data: {
+          day: updatedDay,
+          statsUpdated: statisticsEnabledChanged,
+        }
+      });
     } catch (err) {
       next(new Error(req.t('errors.response.uploadErr')));
     }
