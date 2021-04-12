@@ -1,6 +1,7 @@
 const Day = require('../models/Day');
 const User = require('../models/User');
 const updateUserStats = require('../tracker/updateUserStats');
+const wrapErrorResponse = require('../helpers/wrapErrorResponse');
 
 module.exports = {
   async getAll(req, res, next) {
@@ -28,6 +29,10 @@ module.exports = {
       const day = await Day.findOne({ _id })
         .populate('dailyActivities')
         .populate('meals');
+
+      if (!day) {
+        return res.status(404).send(wrapErrorResponse('errors.response.dayNotFoundErr'));
+      }
 
       res.send({
         data: {
@@ -67,7 +72,7 @@ module.exports = {
       if (statisticsEnabledChanged) {
         const user = await User.findOne({ _id: userId });
         if (!user) {
-          return res.status(404).send(req.t('errors.response.userNotFoundErr'));
+          return res.status(404).send(wrapErrorResponse('errors.response.userNotFoundErr'));
         }
 
         await updateUserStats(user);
@@ -96,7 +101,7 @@ module.exports = {
       // update user stats
       const user = await User.findOne({ _id: userId });
       if (!user) {
-        return res.status(404).send(req.t('errors.response.userNotFoundErr'));
+        return res.status(404).send(wrapErrorResponse('errors.response.userNotFoundErr'));
       }
 
       await updateUserStats(user);

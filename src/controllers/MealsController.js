@@ -2,6 +2,7 @@ const Meal = require('../models/Meal');
 const Day = require('../models/Day');
 const User = require('../models/User');
 const loadTodayForUser = require('../helpers/loadTodayForUser');
+const wrapErrorResponse = require('../helpers/wrapErrorResponse');
 
 module.exports = {
   async createOne(req, res, next) {
@@ -30,7 +31,7 @@ module.exports = {
         const user = await User.findOne({ _id: userId });
 
         if (!user) {
-          throw new Error();
+          return res.status(404).send(wrapErrorResponse('errors.response.userNotFoundErr'));
         }
 
         today = new Day({

@@ -1,6 +1,6 @@
 const User = require('../models/User');
-const Day = require('../models/Day');
 const loadTodayForUser = require('../helpers/loadTodayForUser');
+const wrapErrorResponse = require('../helpers/wrapErrorResponse');
 
 module.exports = {
   async getOne(req, res) {
@@ -8,6 +8,10 @@ module.exports = {
 
     try {
       let user = await User.findOne({ _id: id });
+
+      if (!user) {
+        return res.status(404).send(wrapErrorResponse('errors.response.userNotFoundErr'));
+      }
 
       user = user.toObject();
       delete user.password;
@@ -77,7 +81,7 @@ module.exports = {
         const user = await User.findOne({ _id: id });
 
         if (!user) {
-          throw new Error();
+          return res.status(404).send(wrapErrorResponse('errors.response.userNotFoundErr'));
         }
 
         const today = await loadTodayForUser(id);

@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const jwt = require('express-jwt');
 const routes = require('./routes');
 const generalErrorHandler = require('./middleware/generalErrorHandler');
+const authorizationErrorHandler = require('./middleware/authorizationErrorHandler');
 const i18n = require('./i18n');
 
 switch (process.env.NODE_ENV) {
@@ -22,6 +23,7 @@ const app = express();
 
 app.use(i18n.init);
 app.use(bodyParser.json());
+
 app.use(jwt({
   secret: process.env.JWT_SECRET,
   algorithms: [process.env.JWT_ALGHORITMS],
@@ -33,6 +35,7 @@ app.use(jwt({
     ]
   })
 );
+app.use(authorizationErrorHandler);
 
 routes(app);
 

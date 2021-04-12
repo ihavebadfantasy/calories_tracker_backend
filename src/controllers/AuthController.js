@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const Encryptor = require('../helpers/Encryptor');
 const generateAccessToken = require('../helpers/generateAccessToken');
+const wrapErrorResponse = require('../helpers/wrapErrorResponse');
 
 const encryptor = new Encryptor();
 
@@ -33,13 +34,13 @@ module.exports = {
       const user = await User.findOne({ email });
 
       if (!user) {
-        next(new Error(req.t('errors.response.loginEmailErr')));
+        return res.status(404).send(wrapErrorResponse('errors.response.loginEmailErr'));
       }
 
       const isRightPassword = encryptor.compare(password, user.password);
 
       if (!isRightPassword) {
-        next(new Error(req.t('errors.response.loginPasswordErr')));
+        return res.status(404).send(wrapErrorResponse('errors.response.loginPasswordErr'));
       }
 
       const accessToken = generateAccessToken(user);
