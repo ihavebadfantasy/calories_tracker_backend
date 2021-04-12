@@ -49,7 +49,7 @@ module.exports = {
     if (req.body.weight) {
       dayProps.weight = req.body.weight;
     }
-    console.log(req.body);
+
     if ('statisticsEnabled' in req.body) {
       dayProps.statisticsEnabled = req.body.statisticsEnabled;
       statisticsEnabledChanged = true;
@@ -67,7 +67,7 @@ module.exports = {
       if (statisticsEnabledChanged) {
         const user = await User.findOne({ _id: userId });
         if (!user) {
-          throw new Error();
+          return res.status(404).send(req.t('errors.response.userNotFoundErr'));
         }
 
         await updateUserStats(user);
@@ -86,7 +86,24 @@ module.exports = {
     }
   },
 
-  async updateMany() {
+  async updateMany(req, res, next) {
+    const { daysIds, statisticsEnabled } = req.body;
+    const { id: userId } = req.user;
 
+    try {
+      await Day.updateMany({ _id: { $in: daysIds } }, { statisticsEnabled });
+
+      // update user stats
+      const user = await User.findOne({ _id: userId });
+      if (!user) {
+        return res.status(404).send(req.t('errors.response.userNotFoundErr'));
+      }
+
+      await updateUserStats(user);
+
+      res.status(200).send();
+    } catch (e) {
+      next(new Error(req.t('errors.response.updateErr')));
+    }
   }
 };

@@ -17,11 +17,13 @@ module.exports = [
       }
     }),
   check('password')
+    .trim()
     .isLength({ min: 5 })
     .withMessage((value, { req }) => {
       return req.t('errors.validation.passwordLengthValidation');
     }),
   check('passwordConfirmation')
+    .trim()
     .custom((value, { req }) => {
       if(value !== req.body.password) {
         throw new Error(req.t('errors.validation.passwordConfirmationRequiredValidation'));

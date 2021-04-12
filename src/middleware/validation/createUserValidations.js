@@ -4,6 +4,7 @@ const numberCheck = require('./numberCheck');
 module.exports = [
   check('username')
     .notEmpty()
+    .trim()
     .withMessage((value, { req }) => {
       return req.t('errors.validation.usernameRequiredCheck');
     }),

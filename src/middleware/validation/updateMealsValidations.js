@@ -7,4 +7,7 @@ module.exports = [
     .custom((value, { req }) => {
       return numberCheck(value, req.t('errors.validation.caloriesNumberCheck'))
     }),
+  check('nutriment')
+    .optional()
+    .trim()
 ];

@@ -1,6 +1,7 @@
 const DaysController = require('../controllers/DaysController');
 const validate = require('../middleware/validation/validate');
 const updateDayValidation = require('../middleware/validation/updateDayValidations');
+const updateManyDaysValidation = require('../middleware/validation/updateManyDaysValidations');
 
 module.exports = (app) => {
   app.get(
@@ -15,6 +16,9 @@ module.exports = (app) => {
     validate(updateDayValidation),
     DaysController.updateOne
   );
-  // TODO: add validation
-  app.put('/api/days/:id', DaysController.updateMany);
+  app.put(
+    '/api/days',
+    validate(updateManyDaysValidation),
+    DaysController.updateMany
+  );
 };
