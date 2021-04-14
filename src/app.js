@@ -9,13 +9,30 @@ const i18n = require('./i18n');
 
 switch (process.env.NODE_ENV) {
   case 'test':
-    mongoose.connect(`mongodb://localhost/${process.env.TEST_DB_NAME}`);
+    mongoose.connect(
+      `mongodb://localhost/${process.env.TEST_DB_NAME}`,
+      {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+      }
+     );
     break;
   case 'prod':
-    mongoose.connect(`mongodb://localhost/${process.env.PROD_DB_NAME}`);
+    mongoose.connect(
+      `mongodb://localhost/${process.env.PROD_DB_NAME}`,
+      {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+      }
+    );
     break;
   case 'dev':
-    mongoose.connect(`mongodb://localhost/${process.env.DEV_DB_NAME}`);
+    mongoose.connect(`mongodb://localhost/${process.env.DEV_DB_NAME}`,
+      {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+      }
+    );
     break;
 }
 
