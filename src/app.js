@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const jwt = require('express-jwt');
+const cors = require('cors')
 const i18n = require('./i18n');
 const config = require('./config');
 const routes = require('./routes');
@@ -30,6 +31,7 @@ switch (process.env.NODE_ENV) {
 
 const app = express();
 
+app.use(cors())
 app.use(i18n.init);
 app.use(bodyParser.json());
 
