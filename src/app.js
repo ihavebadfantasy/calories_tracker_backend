@@ -2,36 +2,28 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const jwt = require('express-jwt');
+const i18n = require('./i18n');
+const config = require('./config');
 const routes = require('./routes');
 const generalErrorHandler = require('./middleware/generalErrorHandler');
 const authorizationErrorHandler = require('./middleware/authorizationErrorHandler');
-const i18n = require('./i18n');
 
 switch (process.env.NODE_ENV) {
   case 'test':
     mongoose.connect(
       `mongodb://localhost/${process.env.TEST_DB_NAME}`,
-      {
-        useNewUrlParser: true,
-        useCreateIndex: true,
-      }
+      config.mongoose.connection
      );
     break;
   case 'prod':
     mongoose.connect(
       `mongodb://localhost/${process.env.PROD_DB_NAME}`,
-      {
-        useNewUrlParser: true,
-        useCreateIndex: true,
-      }
+      config.mongoose.connection
     );
     break;
   case 'dev':
     mongoose.connect(`mongodb://localhost/${process.env.DEV_DB_NAME}`,
-      {
-        useNewUrlParser: true,
-        useCreateIndex: true,
-      }
+      config.mongoose.connection
     );
     break;
 }
