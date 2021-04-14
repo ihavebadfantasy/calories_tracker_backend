@@ -1,5 +1,5 @@
 const wrapErrorResponse = require('../helpers/wrapErrorResponse');
 
-module.exports = (err, req, res) => {
-  res.status(400).send(wrapErrorResponse(err.message));
+module.exports = (err, req, res, next) => {
+  res.status(500).send(wrapErrorResponse(err));
 }

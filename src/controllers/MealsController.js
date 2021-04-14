@@ -3,6 +3,7 @@ const Day = require('../models/Day');
 const User = require('../models/User');
 const loadTodayForUser = require('../helpers/loadTodayForUser');
 const wrapErrorResponse = require('../helpers/wrapErrorResponse');
+const generateCustomErr = require('../helpers/generateCustomError');
 
 module.exports = {
   async createOne(req, res, next) {
@@ -54,7 +55,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      next(new Error(req.t('errors.response.saveErr')));
+      next(generateCustomErr(req.t('errors.response.saveErr'), err.message));
     }
   },
 
@@ -83,10 +84,19 @@ module.exports = {
     try {
       // just update the meal props
       if (!isCaloriesUpdated) {
-        await Meal.findOneAndUpdate({ _id: mealId }, mealProps);
+        const meal = await Meal.findOneAndUpdate({ _id: mealId }, mealProps);
+
+        if (!meal) {
+          return res.status(404).send(wrapErrorResponse('errors.response.mealNotFoundErr'));
+        }
       } else {
         // calories were updated for meal so need to update the Day also
         const meal = await Meal.findOne({ _id: mealId });
+
+        if (!meal) {
+          return res.status(404).send(wrapErrorResponse('errors.response.mealNotFoundErr'));
+        }
+
         const prevMealCalories = meal.calories;
 
         const today = await loadTodayForUser(userId);
@@ -108,7 +118,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      next(new Error(req.t('errors.response.updateErr')));
+      next(generateCustomErr(req.t('errors.response.updateErr'), err.message));
     }
   },
 
@@ -120,7 +130,7 @@ module.exports = {
       const meal = await Meal.findOne({ _id: mealId });
 
       if (!meal) {
-        throw new Error();
+        return res.status(404).send(wrapErrorResponse('errors.response.mealNotFoundErr'));
       }
 
       // loading Day to remove dailyActivity from it
@@ -144,7 +154,7 @@ module.exports = {
         res.status(204).send();
       });
     } catch (err) {
-      next(new Error(req.t('errors.response.deleteErr')));
+      next(generateCustomErr(req.t('errors.response.deleteErr'), err.message));
     }
   }
 };

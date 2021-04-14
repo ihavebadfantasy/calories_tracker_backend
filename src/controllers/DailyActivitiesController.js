@@ -3,6 +3,7 @@ const Day = require('../models/Day');
 const User = require('../models/User');
 const loadTodayForUser = require('../helpers/loadTodayForUser');
 const wrapErrorResponse = require('../helpers/wrapErrorResponse');
+const generateCustomErr = require('../helpers/generateCustomError');
 
 module.exports = {
   async createOne(req, res, next) {
@@ -57,7 +58,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      next(new Error(req.t('errors.response.saveErr')));
+      next(generateCustomErr(req.t('errors.response.saveErr'), err.message));
     }
   },
 
@@ -89,10 +90,23 @@ module.exports = {
     try {
       // just update the dailyActivity props
       if (!isCaloriesUpdated) {
-        await DailyActivity.findOneAndUpdate({ _id: activityId }, dailyActivityProps);
+        const dailyActivity = await DailyActivity.findOneAndUpdate(
+          { _id: activityId },
+          dailyActivityProps,
+          { runValidators: true }
+        );
+
+        if (!dailyActivity) {
+          return res.status(404).send(wrapErrorResponse('errors.response.dailyActivityNotFoundErr'));
+        }
       } else {
         // calories were updated for dailyActivity so need to update the Day also
         const dailyActivity = await DailyActivity.findOne({ _id: activityId });
+
+        if (!dailyActivity) {
+          return res.status(404).send(wrapErrorResponse('errors.response.dailyActivityNotFoundErr'));
+        }
+
         const prevActivityCalories = dailyActivity.calories;
 
         const today = await loadTodayForUser('userId');
@@ -114,7 +128,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      next(new Error(req.t('errors.response.updateErr')));
+      next(generateCustomErr(req.t('errors.response.updateErr'), err.message));
     }
   },
 
@@ -144,13 +158,13 @@ module.exports = {
       // deleting daily activity itself
       DailyActivity.delete({ _id: activityId }, (err) => {
         if (err) {
-          throw new Error();
+          throw new Error(err);
         }
 
         res.status(204).send();
       });
     } catch (err) {
-      next(new Error(req.t('errors.response.deleteErr')));
+      next(generateCustomErr(req.t('errors.response.deleteErr'), err.message));
     }
   }
 };

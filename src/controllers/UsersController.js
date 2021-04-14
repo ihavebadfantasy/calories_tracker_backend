@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const loadTodayForUser = require('../helpers/loadTodayForUser');
 const wrapErrorResponse = require('../helpers/wrapErrorResponse');
+const generateCustomErr = require('../helpers/generateCustomError');
 
 module.exports = {
   async getOne(req, res) {
@@ -22,7 +23,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      next(new Error(req.t('errors.response.userProfileErr')));
+      next(generateCustomErr(req.t('errors.response.userProfileErr'), err.message));
     }
   },
 
@@ -36,14 +37,24 @@ module.exports = {
     };
 
     try {
-      await User.findOneAndUpdate({ _id: id }, {
-        username,
-        weight,
-        age,
-        caloriesPerDay,
-        stats,
-        isRegistrationComplete: true,
-      });
+      const updRes = await User.findOneAndUpdate(
+        { _id: id },
+        {
+          username,
+          weight,
+          age,
+          caloriesPerDay,
+          stats,
+          isRegistrationComplete: true,
+        },
+        {
+          runValidators: true,
+        }
+      );
+
+      if (!updRes) {
+        return res.status(404).send(wrapErrorResponse('errors.response.userNotFoundErr'));
+      }
 
       user = await User.findOne({ _id: id });
 
@@ -56,7 +67,7 @@ module.exports = {
         }
       });
     } catch(err) {
-      next(new Error(req.t('errors.response.userProfileSaveErr')));
+      next(generateCustomErr(req.t('errors.response.userProfileSaveErr'), err.message));
     }
   },
 
@@ -108,7 +119,7 @@ module.exports = {
         data: updatedUser,
       });
     } catch (err) {
-      next(new Error(req.t('errors.response.updateErr')));
+      next(generateCustomErr(req.t('errors.response.updateErr'), err.message));
     }
   },
 

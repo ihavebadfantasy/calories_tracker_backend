@@ -2,6 +2,7 @@ const User = require('../models/User');
 const Encryptor = require('../helpers/Encryptor');
 const generateAccessToken = require('../helpers/generateAccessToken');
 const wrapErrorResponse = require('../helpers/wrapErrorResponse');
+const generateCustomErr = require('../helpers/generateCustomError');
 
 const encryptor = new Encryptor();
 
@@ -23,7 +24,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      next(new Error(req.t('errors.response.registrationErr')));
+      next(generateCustomErr(req.t('errors.response.registrationErr'), err.message));
     }
   },
 
@@ -31,26 +32,31 @@ module.exports = {
     const { password, email } = req.body;
 
     try {
-      const user = await User.findOne({ email });
+      let user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(404).send(wrapErrorResponse('errors.response.loginEmailErr'));
+        return res.status(404).send(wrapErrorResponse(req.t('errors.response.loginCredentialsErr')));
       }
 
       const isRightPassword = encryptor.compare(password, user.password);
 
       if (!isRightPassword) {
-        return res.status(404).send(wrapErrorResponse('errors.response.loginPasswordErr'));
+        return res.status(404).send(wrapErrorResponse(req.t('errors.response.loginCredentialsErr')));
       }
 
       const accessToken = generateAccessToken(user);
 
+      user = user.toObject();
+      delete user.password;
+      throw new Error()
+
       res.send({ data: {
           accessToken,
+          user,
         }
       });
     } catch (err) {
-      next(new Error(req.t('errors.response.loginErr')));
+      next(generateCustomErr(req.t('errors.response.loginErr'), err.message));
     }
   }
 };

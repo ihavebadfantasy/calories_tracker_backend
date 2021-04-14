@@ -1,7 +1,8 @@
-module.exports = (msg) => {
+module.exports = (err) => {
   return {
     error: {
-      message: msg
+      message: err.message,
+      body: err.body || null,
     }
   };
 }

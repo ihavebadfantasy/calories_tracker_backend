@@ -1,9 +1,10 @@
 const Activity = require('../models/Activity');
+const generateCustomErr = require('../helpers/generateCustomError');
 
 module.exports = {
   async getAll(req, res, next) {
     try {
-      const activities = await Activity.find();
+      const activities = await Activity.find({});
 
       res.send({
         data: {
@@ -11,7 +12,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      next(new Error(req.t('errors.response.activitiesLoadErr')));
+      next(generateCustomErr(req.t('errors.response.activitiesLoadErr'), err.message));
     }
   }
 }

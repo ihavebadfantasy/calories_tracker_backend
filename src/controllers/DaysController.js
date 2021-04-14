@@ -2,6 +2,7 @@ const Day = require('../models/Day');
 const User = require('../models/User');
 const updateUserStats = require('../tracker/updateUserStats');
 const wrapErrorResponse = require('../helpers/wrapErrorResponse');
+const generateCustomErr = require('../helpers/generateCustomError');
 
 module.exports = {
   async getAll(req, res, next) {
@@ -9,8 +10,7 @@ module.exports = {
 
     try {
       const days = await Day.find({ userId: user.id })
-        .populate('dailyActivities')
-        .populate('meals');
+        .populate(['dailyActivities', 'meals']);
 
       res.send({
         data: {
@@ -18,7 +18,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      next(new Error(req.t('errors.response.daysLoadErr')))
+      next(generateCustomErr(req.t('errors.response.daysLoadErr'), err.message));
     }
   },
 
@@ -40,7 +40,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      next(new Error(req.t('errors.response.dayLoadErr')));
+      next(generateCustomErr(req.t('errors.response.dayLoadErr'), err.message));
     }
   },
 
@@ -62,10 +62,14 @@ module.exports = {
 
     try {
       // just a simple Day update
-      const day = await Day.findOneAndUpdate({ _id: dayId }, dayProps);
+      const day = await Day.findOneAndUpdate(
+        { _id: dayId },
+        dayProps,
+        { runValidators: true }
+      );
 
       if (!day) {
-        throw new Error();
+        return res.status(404).send(wrapErrorResponse('errors.response.dayNotFoundErr'));
       }
 
       // if statisticsEnabled flag has been changed need also to re-count stats for user
@@ -87,7 +91,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      next(new Error(req.t('errors.response.uploadErr')));
+      next(generateCustomErr(req.t('errors.response.updateErr'), err.message));
     }
   },
 
@@ -96,7 +100,17 @@ module.exports = {
     const { id: userId } = req.user;
 
     try {
-      await Day.updateMany({ _id: { $in: daysIds } }, { statisticsEnabled });
+      const days = await Day.updateMany(
+        { _id: { $in: daysIds } },
+        { statisticsEnabled },
+        {
+          runValidators: true,
+        }
+      );
+
+      if(!days || days.length < 1) {
+        return res.status(404).send(wrapErrorResponse('errors.response.dayNotFoundErr'));
+      }
 
       // update user stats
       const user = await User.findOne({ _id: userId });
@@ -107,8 +121,8 @@ module.exports = {
       await updateUserStats(user);
 
       res.status(200).send();
-    } catch (e) {
-      next(new Error(req.t('errors.response.updateErr')));
+    } catch (err) {
+      next(generateCustomErr(req.t('errors.response.updateErr'), err.message));
     }
   }
 };

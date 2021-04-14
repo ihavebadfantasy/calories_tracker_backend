@@ -26,6 +26,7 @@ const UserSchema = new Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
   password: {
     type: String,
@@ -44,18 +45,6 @@ const UserSchema = new Schema({
     default: null,
   },
   stats: StatsSchema,
-  // averageWeight: {
-  //   type: Number,
-  //   default: null,
-  // },
-  // averageCaloriesPerDay: {
-  //   type: Number,
-  //   default: 0,
-  // },
-  // averageActivityPerDay: {
-  //   type: Number,
-  //   default: 0,
-  // },
   isRegistrationComplete: {
     type: Boolean,
     default: false,
