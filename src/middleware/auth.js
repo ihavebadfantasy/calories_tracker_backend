@@ -8,7 +8,7 @@ module.exports = (config) => {
 
   return (req, res, next) => {
     if (config.ignorePaths.includes(req.url)) {
-      next();
+      return next();
     }
 
     try {

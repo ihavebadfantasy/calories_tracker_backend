@@ -20,7 +20,7 @@ module.exports = {
       user.tokens = [{ token: accessToken }];
       await user.save();
 
-      res.send({ data: {
+      res.status(201).send({ data: {
           accessToken,
         }
       });
@@ -49,7 +49,7 @@ module.exports = {
       user.tokens.push({ token: accessToken });
       await user.save();
 
-      res.send({ data: {
+      res.status(201).send({ data: {
           accessToken,
           user,
         }
@@ -60,7 +60,6 @@ module.exports = {
   },
 
   async logout(req, res, next) {
-    console.log('in logout');
     const { id } = req.user;
     const { token } = req;
 

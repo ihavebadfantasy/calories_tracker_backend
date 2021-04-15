@@ -6,10 +6,10 @@ const generateCustomErr = require('../helpers/generateCustomError');
 
 module.exports = {
   async getAll(req, res, next) {
-    const { user } = req;
+    const { id: userId } = req.user;
 
     try {
-      const days = await Day.find({ userId: user.id })
+      const days = await Day.find({ userId })
         .populate(['dailyActivities', 'meals']);
 
       res.send({
@@ -24,9 +24,10 @@ module.exports = {
 
   async getOne(req, res, next) {
     const _id = req.params.id;
+    const { id: userId } = req.user;
 
     try {
-      const day = await Day.findOne({ _id })
+      const day = await Day.findOne({ _id, userId })
         .populate('dailyActivities')
         .populate('meals');
 
@@ -63,7 +64,7 @@ module.exports = {
     try {
       // just a simple Day update
       const day = await Day.findOneAndUpdate(
-        { _id: dayId },
+        { _id: dayId, userId },
         dayProps,
         { runValidators: true }
       );
@@ -82,7 +83,7 @@ module.exports = {
         await updateUserStats(user);
       }
 
-      const updatedDay = await Day.findOne({ _id: dayId });
+      const updatedDay = await Day.findOne({ _id: dayId, userId });
 
       res.send({
         data: {
@@ -101,7 +102,7 @@ module.exports = {
 
     try {
       const days = await Day.updateMany(
-        { _id: { $in: daysIds } },
+        { _id: { $in: daysIds }, userId },
         { statisticsEnabled },
         {
           runValidators: true,

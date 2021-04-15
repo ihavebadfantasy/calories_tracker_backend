@@ -91,7 +91,7 @@ module.exports = {
       // just update the dailyActivity props
       if (!isCaloriesUpdated) {
         const dailyActivity = await DailyActivity.findOneAndUpdate(
-          { _id: activityId },
+          { _id: activityId, userId },
           dailyActivityProps,
           { runValidators: true }
         );
@@ -134,10 +134,11 @@ module.exports = {
 
   async deleteOne(req, res, next) {
     const activityId = req.params.id;
+    const userId = req.user.id;
 
     try {
       // loading dailyActivity to get userId
-      const dailyActivity = await DailyActivity.findOne({ _id: activityId });
+      const dailyActivity = await DailyActivity.findOne({ _id: activityId, userId });
 
       if (!dailyActivity) {
         throw new Error();

@@ -66,9 +66,7 @@ module.exports = {
 
     const userId = req.user.id;
 
-    const mealProps = {
-      userId,
-    };
+    const mealProps = {};
 
     let isCaloriesUpdated = false;
 
@@ -84,7 +82,7 @@ module.exports = {
     try {
       // just update the meal props
       if (!isCaloriesUpdated) {
-        const meal = await Meal.findOneAndUpdate({ _id: mealId }, mealProps);
+        const meal = await Meal.findOneAndUpdate({ _id: mealId, userId }, mealProps);
 
         if (!meal) {
           return res.status(404).send(wrapErrorResponse('errors.response.mealNotFoundErr'));
@@ -124,10 +122,11 @@ module.exports = {
 
   async deleteOne(req, res, next) {
     const mealId = req.params.id;
+    const userId = req.user.id;
 
     try {
       // loading meal to get userId
-      const meal = await Meal.findOne({ _id: mealId });
+      const meal = await Meal.findOne({ _id: mealId, userId });
 
       if (!meal) {
         return res.status(404).send(wrapErrorResponse('errors.response.mealNotFoundErr'));
