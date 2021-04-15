@@ -14,9 +14,6 @@ module.exports = {
         return res.status(404).send(wrapErrorResponse('errors.response.userNotFoundErr'));
       }
 
-      user = user.toObject();
-      delete user.password;
-
       res.send({
         data: {
           user
@@ -57,9 +54,6 @@ module.exports = {
       }
 
       user = await User.findOne({ _id: id });
-
-      user = user.toObject();
-      delete user.password;
 
       res.send({
         data: {
@@ -111,9 +105,6 @@ module.exports = {
       await User.updateOne({ _id: id }, userProps);
 
       let updatedUser = await User.findOne({ _id: id });
-
-      updatedUser = updatedUser.toObject();
-      delete updatedUser.password;
 
       res.send({
         data: updatedUser,

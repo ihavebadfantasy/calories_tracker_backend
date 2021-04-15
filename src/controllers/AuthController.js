@@ -10,14 +10,15 @@ module.exports = {
   async register(req, res, next) {
     try {
       const passwordHash = await encryptor.hash(req.body.password);
+
       const user = new User({
         email: req.body.email,
         password: passwordHash,
       });
 
-      await user.save();
-
       const accessToken = generateAccessToken(user);
+      user.tokens = [{ token: accessToken }];
+      await user.save();
 
       res.send({ data: {
           accessToken,
@@ -35,20 +36,18 @@ module.exports = {
       let user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(404).send(wrapErrorResponse(req.t('errors.response.loginCredentialsErr')));
+        return res.status(401).send(wrapErrorResponse(req.t('errors.response.loginCredentialsErr')));
       }
 
       const isRightPassword = encryptor.compare(password, user.password);
 
       if (!isRightPassword) {
-        return res.status(404).send(wrapErrorResponse(req.t('errors.response.loginCredentialsErr')));
+        return res.status(401).send(wrapErrorResponse(req.t('errors.response.loginCredentialsErr')));
       }
 
       const accessToken = generateAccessToken(user);
-
-      user = user.toObject();
-      delete user.password;
-      throw new Error()
+      user.tokens.push({ token: accessToken });
+      await user.save();
 
       res.send({ data: {
           accessToken,
@@ -57,6 +56,30 @@ module.exports = {
       });
     } catch (err) {
       next(generateCustomErr(req.t('errors.response.loginErr'), err.message));
+    }
+  },
+
+  async logout(req, res, next) {
+    console.log('in logout');
+    const { id } = req.user;
+    const { token } = req;
+
+    try {
+      const user = await User.findOneAndUpdate({ _id: id }, {
+        '$pull': {
+          tokens: {
+            token,
+          }
+        }
+      })
+
+      if (!user) {
+        return res.status(404).send(wrapErrorResponse(req.t('errors.response.userNotFoundErr')));
+      }
+
+      res.status(201).send();
+    } catch (err) {
+      next(generateCustomErr(req.t('errors.response.logoutErr'), err.message));
     }
   }
 };

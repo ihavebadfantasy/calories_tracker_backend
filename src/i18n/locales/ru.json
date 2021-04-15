@@ -32,7 +32,8 @@
 			"dayNotFoundErr": "Не удалось найти день",
 			"unauthorizedErr": "Вы не авторизованы",
 			"dailyActivityNotFoundErr": "Физическая активность не найдена",
-			"mealNotFoundErr": "Прием пищи не найден"
+			"mealNotFoundErr": "Прием пищи не найден",
+			"logoutErr": "Не удалось выйти. Перезагрузите страницу и попробуйте еще раз"
 		}
 	}
 }

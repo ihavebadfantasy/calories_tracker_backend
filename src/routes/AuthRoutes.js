@@ -14,4 +14,5 @@ module.exports = (app) => {
     validate(loginValidations),
     AuthController.login
   );
+  app.post('/api/auth/logout', AuthController.logout);
 }

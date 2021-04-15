@@ -18,6 +18,13 @@ const StatsSchema = {
   },
 }
 
+const TokenSchema = {
+  token: {
+    type: String,
+    required: true
+  }
+}
+
 const UserSchema = new Schema({
   username: {
     type: String,
@@ -49,6 +56,7 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  tokens: [TokenSchema],
 }, { timestamps: true });
 
 UserSchema.plugin(mongoose_delete, { overrideMethods: true });
@@ -57,6 +65,16 @@ UserSchema.pre('findOneAndUpdate', function(next) {
   this.options.runValidators = true;
   next();
 });
+
+UserSchema.toJSON = function () {
+  let user = this;
+  user.toObject();
+
+  delete user.password;
+  delete user.tokens;
+
+  return user;
+}
 
 const User = mongoose.model('user', UserSchema);
 
