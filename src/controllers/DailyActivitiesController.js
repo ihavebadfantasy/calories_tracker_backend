@@ -3,6 +3,7 @@ const loadTodayForUser = require('../helpers/loadTodayForUser');
 const wrapErrorResponse = require('../helpers/wrapErrorResponse');
 const generateCustomErr = require('../helpers/generateCustomError');
 const createTodayForUser = require('../helpers/createTodayForUser');
+const loadDayForUserByTimestamp = require('../helpers/loadDayForUserByTimestamp');
 
 module.exports = {
   async createOne(req, res, next) {
@@ -97,12 +98,12 @@ module.exports = {
 
         const prevActivityCalories = dailyActivity.calories;
 
-        const today = await loadTodayForUser('userId');
+        const activityDay = await loadDayForUserByTimestamp(userId, dailyActivity.createdAt);
 
-        const newCaloriesLeft = today.caloriesLeft - prevActivityCalories + dailyActivityProps.calories;
+        const newCaloriesLeft = activityDay.caloriesLeft - prevActivityCalories + dailyActivityProps.calories;
 
         const activityUpdate = dailyActivity.update(dailyActivityProps);
-        const dayUpdate = today.update({
+        const dayUpdate = activityDay.update({
           caloriesLeft: newCaloriesLeft,
         });
         await Promise.all([activityUpdate, dayUpdate]);
@@ -133,14 +134,14 @@ module.exports = {
       }
 
       // loading Day to remove dailyActivity from it
-      let today = await loadTodayForUser(dailyActivity.userId);
+      let activityDay = await loadDayForUserByTimestamp(dailyActivity.userId, dailyActivity.createdAt);
 
-      if (!today) {
+      if (!activityDay) {
         throw new Error();
       }
 
-      await today.update({
-        caloriesLeft: today.caloriesLeft - dailyActivity.calories,
+      await activityDay.update({
+        caloriesLeft: activityDay.caloriesLeft - dailyActivity.calories,
         $pull: { dailyActivities: activityId }
       });
 

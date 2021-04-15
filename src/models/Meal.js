@@ -12,6 +12,7 @@ const MealSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'user',
+    index: true,
   },
 }, { timestamps: true });
 

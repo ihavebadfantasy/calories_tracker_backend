@@ -1,10 +1,8 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
 const wrapErrorResponse = require('../helpers/wrapErrorResponse');
 
 module.exports = (config) => {
   config.ignorePaths = config.ignorePaths || [];
-  console.log('in auth');
 
   return (req, res, next) => {
     if (config.ignorePaths.includes(req.url)) {
