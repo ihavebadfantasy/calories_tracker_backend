@@ -2,6 +2,7 @@ const User = require('../models/User');
 const loadTodayForUser = require('../helpers/loadTodayForUser');
 const wrapErrorResponse = require('../helpers/wrapErrorResponse');
 const generateCustomErr = require('../helpers/generateCustomError');
+const createTodayForUser = require('../helpers/createTodayForUser');
 
 module.exports = {
   async getOne(req, res) {
@@ -54,6 +55,8 @@ module.exports = {
       }
 
       user = await User.findOne({ _id: id });
+
+      await createTodayForUser(id, res);
 
       res.send({
         data: {

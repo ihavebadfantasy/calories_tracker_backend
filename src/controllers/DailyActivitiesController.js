@@ -1,9 +1,8 @@
 const DailyActivity = require('../models/DailyActivity');
-const Day = require('../models/Day');
-const User = require('../models/User');
 const loadTodayForUser = require('../helpers/loadTodayForUser');
 const wrapErrorResponse = require('../helpers/wrapErrorResponse');
 const generateCustomErr = require('../helpers/generateCustomError');
+const createTodayForUser = require('../helpers/createTodayForUser');
 
 module.exports = {
   async createOne(req, res, next) {
@@ -32,18 +31,7 @@ module.exports = {
 
       // creating current day if not exists
       if (!today) {
-        const user = await User.findOne({ _id: userId });
-
-        if (!user) {
-          return res.status(404).send(wrapErrorResponse('errors.response.userNotFoundErr'));
-        }
-
-        today = new Day({
-          caloriesLeft: user.caloriesPerDay,
-          userId: user._id
-        });
-
-        await today.save();
+        today = await createTodayForUser(userId, res);
       }
 
       // updating current day caloriesLeft and dailyActivities
