@@ -39,7 +39,8 @@ app.use(auth({
   ignorePaths: [
     '/api/auth/login',
     '/api/auth/register'
-  ]
+  ],
+  refreshPath: '/api/auth/refresh'
 }));
 
 routes(app);

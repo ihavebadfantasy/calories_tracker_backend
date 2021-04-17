@@ -11,13 +11,21 @@ module.exports = (config) => {
 
     try {
       const token = req.header('Authorization').replace('Bearer ', '');
-      const decoded = jwt.verify(token, config.secret);
+
+      let decoded;
+      if (config.refreshPath && config.refreshPath === req.url) {
+        decoded = jwt.verify(token, config.secret, {
+          ignoreExpiration: true,
+        });
+      } else {
+        decoded = jwt.verify(token, config.secret);
+      }
 
       req.token = token;
       req.user = decoded;
       next();
     } catch (err) {
-      return res.status(401).send(wrapErrorResponse(req.t('errors.response.unauthorizedErr')));
+      return res.status(401).send(wrapErrorResponse(new Error(req.t('errors.response.unauthorizedErr'))));
     }
   }
 }

@@ -14,7 +14,7 @@
 			"passwordConfirmationRequiredValidation": "Подтверждение пароля обязательно и должно совпадать с паролем",
 			"emailFormatCheck": "Почта должна быть настоящим email-адресом",
 			"daysIdsNotEmptyArrCheck": "Должен быть выбран хотя бы один день для изменения статистики",
-			"emailRequiresCheck": "errors.validation.emailRequiresCheck"
+			"refreshTokenCheck": "Нет токена - нет рефреша"
 		},
 		"response": {
 			"activitiesLoadErr": "Не удалось загрузить виды физической активности. Попробуйте перезагрузить страницу",
@@ -33,7 +33,8 @@
 			"unauthorizedErr": "Вы не авторизованы",
 			"dailyActivityNotFoundErr": "Физическая активность не найдена",
 			"mealNotFoundErr": "Прием пищи не найден",
-			"logoutErr": "Не удалось выйти. Перезагрузите страницу и попробуйте еще раз"
+			"logoutErr": "Не удалось выйти. Перезагрузите страницу и попробуйте еще раз",
+			"refreshErr": "Не удалось обновить токен"
 		}
 	}
 }
