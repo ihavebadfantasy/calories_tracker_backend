@@ -3,6 +3,7 @@ const validate = require('../middleware/validation/validate');
 const registerValidations = require('../middleware/validation/registerValidations');
 const loginValidations = require('../middleware/validation/loginValidations');
 const refreshValidations = require('../middleware/validation/refreshValidations');
+const authRateLimiter = require('../middleware/rateLimiter/authRateLimiter');
 
 module.exports = (app) => {
   app.post(
@@ -12,6 +13,7 @@ module.exports = (app) => {
   );
   app.post(
     '/api/auth/login',
+    authRateLimiter.prevent,
     validate(loginValidations),
     AuthController.login
   );
