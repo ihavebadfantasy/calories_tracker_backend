@@ -9,12 +9,13 @@
 			"durationNumberCheck": "Продолжительность должна быть количеством минут",
 			"emailRequiredCheck": "Email обязателен к заполнению и должен быть настоящим email-адресом",
 			"passwordRequiredCheck": "Пароль обязателен",
-			"passwordUniqueCheck": "Пользователь с такой почтой уже сущестует",
+			"emailUniqueCheck": "Пользователь с такой почтой уже сущестует",
 			"passwordLengthValidation": "Пароль должен содержать минимум 5 символов",
 			"passwordConfirmationRequiredValidation": "Подтверждение пароля обязательно и должно совпадать с паролем",
 			"emailFormatCheck": "Почта должна быть настоящим email-адресом",
 			"daysIdsNotEmptyArrCheck": "Должен быть выбран хотя бы один день для изменения статистики",
-			"refreshTokenCheck": "Нет токена - нет рефреша"
+			"refreshTokenCheck": "Нет токена - нет рефреша",
+			"oldPasswordCheck": "Неверный пароль"
 		},
 		"response": {
 			"activitiesLoadErr": "Не удалось загрузить виды физической активности. Попробуйте перезагрузить страницу",
@@ -38,13 +39,15 @@
 			"tooManyRequestsErr": "Слишком много запросов",
 			"generalErr": "Что-то пошло не так. Перезагрузите страницу и попробуйте еще раз",
 			"resetPasswordTokenErr": "Что-то у нас не так с токеном сброса пароля!",
+			"emailConfirmationTokenErr": "Что-то у нас не так с токеном подтверждения почты!",
 			"createNewPasswordErr": "Не удалось установить новый пароль"
 		}
 	},
 	"email": {
 		"subject": {
 			"resetPassword": "Сброс пароля в Cracker",
-			"resetPasswordSucceeded": "Новый пароль в Cracker успешно установлен"
+			"resetPasswordSucceeded": "Новый пароль в Cracker успешно установлен",
+			"confirmEmail": "Подтверждение Вашей почты в Cracker"
 		}
 	}
 }

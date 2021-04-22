@@ -4,7 +4,7 @@ const generateAccessToken = require('../helpers/generateAccessToken');
 const generateRefreshToken = require('../helpers/generateRefreshToken');
 const wrapErrorResponse = require('../helpers/wrapErrorResponse');
 const generateCustomErr = require('../helpers/generateCustomError');
-const generateResetPasswordToken = require('../helpers/generateResetPasswordToken');
+const generateMailingToken = require('../helpers/generateMailingToken');
 const Mailer = require('../mailer/Mailer');
 
 const encryptor = new Encryptor();
@@ -149,7 +149,7 @@ module.exports = {
       }
 
       // generating and saving resetPasswordToken hash data for user
-      const resetPasswordToken = generateResetPasswordToken();
+      const resetPasswordToken = generateMailingToken();
       const resetPasswordTokenHash = await encryptor.hash(resetPasswordToken);
 
       user.resetPasswordToken = resetPasswordTokenHash;

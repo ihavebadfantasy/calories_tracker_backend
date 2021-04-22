@@ -40,7 +40,8 @@ app.use(auth({
     '/api/auth/login',
     '/api/auth/register',
     '/api/auth/forgot-password',
-    '/api/auth/create-new-password'
+    '/api/auth/create-new-password',
+    '/api/users/confirm-email'
   ],
   refreshPath: '/api/auth/refresh'
 }));

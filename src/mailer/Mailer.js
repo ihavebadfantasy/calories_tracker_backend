@@ -17,6 +17,7 @@ class Mailer {
   clientUrl = process.env.CLIENT_URL;
   createPasswordUrl = '/create-password';
   newPasswordWasSetUrl = '/login';
+  confirmEmailUrl = '/confirm-email';
 
   transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
@@ -31,6 +32,24 @@ class Mailer {
       from: process.env.EMAIL_USERNAME,
     }
   );
+
+  async sendConfirmEmail(req, user, token) {
+    const template = await this.getEmailTemplate('confirmEmail');
+
+    try {
+      return await this.transporter.sendMail({
+        to: user.email,
+        subject: req.t('email.subject.confirmEmail'),
+        html: template({
+          name: user.username,
+          link: `${this.clientUrl}${this.confirmEmailUrl}?token=${token}&id=${user._id}`,
+        }),
+      });
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
 
   async sendNewPasswordWasSetEmail(req, user) {
     const template = await this.getEmailTemplate('resetPasswordSucceeded');

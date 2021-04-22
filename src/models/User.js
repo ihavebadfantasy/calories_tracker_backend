@@ -65,6 +65,14 @@ const UserSchema = new Schema({
     type: String,
     default: null,
   },
+  isEmailConfirmed: {
+    type: Boolean,
+    default: false
+  },
+  emailConfirmationToken: {
+    type: String,
+    default: null,
+  },
 }, { timestamps: true });
 
 UserSchema.plugin(mongoose_delete, { overrideMethods: true });
