@@ -39,7 +39,8 @@ app.use(auth({
   ignorePaths: [
     '/api/auth/login',
     '/api/auth/register',
-    '/api/auth/forgot-password'
+    '/api/auth/forgot-password',
+    '/api/auth/create-new-password'
   ],
   refreshPath: '/api/auth/refresh'
 }));

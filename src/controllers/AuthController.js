@@ -4,7 +4,7 @@ const generateAccessToken = require('../helpers/generateAccessToken');
 const generateRefreshToken = require('../helpers/generateRefreshToken');
 const wrapErrorResponse = require('../helpers/wrapErrorResponse');
 const generateCustomErr = require('../helpers/generateCustomError');
-const generateResetPasswordTokenHash = require('../helpers/generateResetPasswordTokenHash');
+const generateResetPasswordToken = require('../helpers/generateResetPasswordToken');
 const Mailer = require('../mailer/Mailer');
 
 const encryptor = new Encryptor();
@@ -149,16 +149,48 @@ module.exports = {
       }
 
       // generating and saving resetPasswordToken hash data for user
-      const resetPasswordTokenHash = await generateResetPasswordTokenHash();
+      const resetPasswordToken = generateResetPasswordToken();
+      const resetPasswordTokenHash = await encryptor.hash(resetPasswordToken);
+
       user.resetPasswordToken = resetPasswordTokenHash;
       await user.save();
 
       // sending resetEmail
-      Mailer.$instance.sendResetPasswordEmail(req, user);
+      Mailer.$instance.sendResetPasswordEmail(req, user, resetPasswordToken);
 
       res.status(200).send({});
     } catch (err) {
       next(generateCustomErr(req.t('errors.response.generalErr'), err.message));
+    }
+  },
+
+  async createNewPassword(req, res, next) {
+    const { password, token, id } = req.body;
+
+    try {
+      // checking if the user exists
+      const user = await User.findOne({ _id: id });
+      if (!user) {
+        return res.status(404).send(wrapErrorResponse(new Error(req.t('errors.response.userNotFoundErr'))));
+      }
+      // check if resetPasswordToken is valid
+      const isTokenValid = await encryptor.compare(token, user.resetPasswordToken);
+      if (!isTokenValid) {
+        return res.status(422).send(wrapErrorResponse(new Error(req.t('errors.response.resetPasswordTokenErr'))));
+      }
+
+      // update user's password and tokens
+      user.password = await encryptor.hash(password);
+      user.resetPasswordToken = null;
+      user.tokens = [];
+
+      await user.save();
+
+      Mailer.$instance.sendNewPasswordWasSetEmail(req, user);
+
+      res.status(200).send({});
+    } catch(err) {
+      next(generateCustomErr(req.t('errors.response.createNewPasswordErr'), err.message));
     }
   }
 };

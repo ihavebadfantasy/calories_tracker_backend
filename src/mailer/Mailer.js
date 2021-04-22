@@ -16,6 +16,7 @@ class Mailer {
 
   clientUrl = process.env.CLIENT_URL;
   createPasswordUrl = '/create-password';
+  newPasswordWasSetUrl = '/login';
 
   transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
@@ -31,16 +32,33 @@ class Mailer {
     }
   );
 
-  async sendResetPasswordEmail(req, user) {
+  async sendNewPasswordWasSetEmail(req, user) {
+    const template = await this.getEmailTemplate('resetPasswordSucceeded');
+
+    try {
+      return await this.transporter.sendMail({
+        to: user.email,
+        subject: req.t('email.subject.resetPasswordSucceeded'),
+        html: template({
+          name: user.username,
+          link: `${this.clientUrl}${this.newPasswordWasSetUrl}`,
+        }),
+      });
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
+  async sendResetPasswordEmail(req, user, token) {
     const template = await this.getEmailTemplate('requestResetPassword');
 
     try {
-      this.transporter.sendMail({
+      return await this.transporter.sendMail({
         to: user.email,
         subject: req.t('email.subject.resetPassword'),
         html: template({
           name: user.username,
-          link: `${this.clientUrl}${this.createPasswordUrl}?token=${user.resetPasswordToken}&id=${user._id}`,
+          link: `${this.clientUrl}${this.createPasswordUrl}?token=${token}&id=${user._id}`,
         }),
       });
     } catch (err) {

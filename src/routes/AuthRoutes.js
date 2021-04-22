@@ -5,6 +5,7 @@ const loginValidations = require('../middleware/validation/loginValidations');
 const refreshValidations = require('../middleware/validation/refreshValidations');
 const authRateLimiter = require('../middleware/rateLimiter/authRateLimiter');
 const forgotPasswordValidations = require('../middleware/validation/forgotPasswordValidations');
+const createNewPasswordValidations = require('../middleware/validation/createNewPasswordValidations');
 
 module.exports = (app) => {
   app.post(
@@ -31,5 +32,10 @@ module.exports = (app) => {
     '/api/auth/forgot-password',
     validate(forgotPasswordValidations),
     AuthController.forgotPassword
+  );
+  app.post(
+    '/api/auth/create-new-password',
+    validate(createNewPasswordValidations),
+    AuthController.createNewPassword
   );
 }
