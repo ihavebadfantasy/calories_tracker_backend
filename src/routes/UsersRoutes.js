@@ -30,5 +30,9 @@ module.exports = (app) => {
     validate(updatePasswordValidations),
     UsersController.updatePassword
   );
+  app.post(
+    '/api/users/request-email-confirmation',
+    UsersController.requestEmailConfirmation
+  );
   // app.delete('/api/users', UsersController.deleteOne);
 }

@@ -188,6 +188,33 @@ module.exports = {
     } catch (err) {
       next(generateCustomErr(req.t('errors.response.createNewPasswordErr'), err.message));
     }
+  },
+
+  async requestEmailConfirmation(req, res, next) {
+    const { id } = req.user;
+
+    try {
+      const user = await User.findOne({
+        _id: id,
+        isEmailConfirmed: false,
+      });
+
+      if (!user) {
+        return res.status(401).send(wrapErrorResponse(new Error(req.t('errors.response.loginCredentialsErr'))));
+      }
+
+      const emailConfirmationToken = generateMailingToken();
+      const emailConfirmationTokenHash = await encryptor.hash(emailConfirmationToken);
+      user.emailConfirmationToken = emailConfirmationTokenHash;
+
+      Mailer.$instance.sendConfirmEmail(req, user, emailConfirmationToken);
+
+      await user.save();
+
+      res.status(200).send({});
+    } catch (err) {
+      next(generateCustomErr(req.t('errors.response.requestEmailConfirmationErr'), err.message));
+    }
   }
 
   // uncomment and add deletion of meals, dailyActivities and days connected to user if need user delete
