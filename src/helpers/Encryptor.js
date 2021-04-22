@@ -14,7 +14,7 @@ class Encryptor {
   }
 
   compare(plainText, hash) {
-    return bcrypt.compareSync(plainText, hash);
+    return bcrypt.compare(plainText, hash);
   }
 
   compareSync(plainText, hash) {

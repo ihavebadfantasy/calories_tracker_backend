@@ -6,10 +6,5 @@ module.exports = [
     .isEmail()
     .withMessage((value, { req }) => {
       return req.t('errors.validation.emailRequiredCheck');
-    }),
-  check('password')
-    .notEmpty()
-    .withMessage((value, { req }) => {
-      return req.t('errors.validation.passwordRequiredCheck');
-    }),
+    })
 ];

@@ -4,6 +4,8 @@ const generateAccessToken = require('../helpers/generateAccessToken');
 const generateRefreshToken = require('../helpers/generateRefreshToken');
 const wrapErrorResponse = require('../helpers/wrapErrorResponse');
 const generateCustomErr = require('../helpers/generateCustomError');
+const generateResetPasswordTokenHash = require('../helpers/generateResetPasswordTokenHash');
+const Mailer = require('../mailer/Mailer');
 
 const encryptor = new Encryptor();
 
@@ -43,13 +45,13 @@ module.exports = {
       let user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(401).send(wrapErrorResponse(req.t('errors.response.loginCredentialsErr')));
+        return res.status(401).send(wrapErrorResponse(new Error(req.t('errors.response.loginCredentialsErr'))));
       }
 
-      const isRightPassword = encryptor.compare(password, user.password);
+      const isRightPassword = await encryptor.compare(password, user.password);
 
       if (!isRightPassword) {
-        return res.status(401).send(wrapErrorResponse(req.t('errors.response.loginCredentialsErr')));
+        return res.status(401).send(wrapErrorResponse(new Error(req.t('errors.response.loginCredentialsErr'))));
       }
 
       const accessToken = generateAccessToken(user);
@@ -86,7 +88,7 @@ module.exports = {
       })
 
       if (!user) {
-        return res.status(404).send(wrapErrorResponse(req.t('errors.response.userNotFoundErr')));
+        return res.status(404).send(wrapErrorResponse(new Error(req.t('errors.response.userNotFoundErr'))));
       }
 
       res.status(201).send();
@@ -133,6 +135,30 @@ module.exports = {
       });
     } catch (err) {
       next(generateCustomErr(req.t('errors.response.refreshErr'), err.message));
+    }
+  },
+
+  async forgotPassword(req, res, next) {
+    const { email } = req.body;
+    try {
+      // checking if user exists
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        return res.status(404).send(wrapErrorResponse(new Error(req.t('errors.response.userNotFoundErr'))));
+      }
+
+      // generating and saving resetPasswordToken hash data for user
+      const resetPasswordTokenHash = await generateResetPasswordTokenHash();
+      user.resetPasswordToken = resetPasswordTokenHash;
+      await user.save();
+
+      // sending resetEmail
+      Mailer.$instance.sendResetPasswordEmail(req, user);
+
+      res.status(200).send({});
+    } catch (err) {
+      next(generateCustomErr(req.t('errors.response.generalErr'), err.message));
     }
   }
 };

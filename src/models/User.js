@@ -61,6 +61,10 @@ const UserSchema = new Schema({
     default: false,
   },
   tokens: [TokenSchema],
+  resetPasswordToken: {
+    type: String,
+    default: null,
+  },
 }, { timestamps: true });
 
 UserSchema.plugin(mongoose_delete, { overrideMethods: true });

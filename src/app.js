@@ -38,7 +38,8 @@ app.use(auth({
   secret: process.env.JWT_SECRET,
   ignorePaths: [
     '/api/auth/login',
-    '/api/auth/register'
+    '/api/auth/register',
+    '/api/auth/forgot-password'
   ],
   refreshPath: '/api/auth/refresh'
 }));

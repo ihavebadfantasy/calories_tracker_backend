@@ -12,5 +12,5 @@ const crypto = require("crypto");
 
   readableStream.pipe(writeableStream);
 
-  writeableStream.write(`JWT_SECRET=${jwtSecret}\nREFRESH_JWT_SECRET=${jwtSecret}\n`);
+  writeableStream.write(`JWT_SECRET=${jwtSecret}\nREFRESH_JWT_SECRET=${refreshJwtSecret}\n`);
 })()

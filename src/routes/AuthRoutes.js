@@ -4,6 +4,7 @@ const registerValidations = require('../middleware/validation/registerValidation
 const loginValidations = require('../middleware/validation/loginValidations');
 const refreshValidations = require('../middleware/validation/refreshValidations');
 const authRateLimiter = require('../middleware/rateLimiter/authRateLimiter');
+const forgotPasswordValidations = require('../middleware/validation/forgotPasswordValidations');
 
 module.exports = (app) => {
   app.post(
@@ -25,5 +26,10 @@ module.exports = (app) => {
     '/api/auth/refresh',
     validate(refreshValidations),
     AuthController.refresh
+  );
+  app.post(
+    '/api/auth/forgot-password',
+    validate(forgotPasswordValidations),
+    AuthController.forgotPassword
   );
 }
