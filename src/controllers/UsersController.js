@@ -80,14 +80,18 @@ module.exports = {
     const { id } = req.user;
 
     let isCaloriesPerDayChanged = false;
+    let isEmailChanged = false;
 
     const userProps = {};
     for (let key in req.body) {
-      if (key === 'username' || key === 'email' || key === 'weight' || key === 'age') {
+      if (key === 'username' || key === 'weight' || key === 'age') {
         userProps[key] = req.body[key];
       } else if (key === 'caloriesPerDay') {
         userProps[key] = req.body[key];
         isCaloriesPerDayChanged = true;
+      } else if (key === 'email') {
+        userProps[key] = req.body[key];
+        isEmailChanged = true;
       }
     }
 
@@ -113,9 +117,23 @@ module.exports = {
         }
       }
 
+      // send emailConfirmation email if email was changed
+      let emailConfirmationToken;
+      if (isEmailChanged) {
+        emailConfirmationToken = generateMailingToken();
+        const emailConfirmationTokenHash = await encryptor.hash(emailConfirmationToken);
+
+        userProps.isEmailConfirmed = false;
+        userProps.emailConfirmationToken = emailConfirmationTokenHash;
+      }
+
       await User.updateOne({ _id: id }, userProps);
 
       let updatedUser = await User.findOne({ _id: id });
+
+      if (isEmailChanged) {
+        Mailer.$instance.sendConfirmEmail(req, updatedUser, emailConfirmationToken);
+      }
 
       res.send({
         data: updatedUser,

@@ -1,5 +1,6 @@
 const { check } = require('express-validator');
 const numberCheck = require('./numberCheck');
+const User = require('../../models/User');
 
 module.exports = [
   check('email')
@@ -8,6 +9,14 @@ module.exports = [
     .isEmail()
     .withMessage((value, { req }) => {
       return req.t('errors.validation.emailFormatCheck');
+    })
+    .custom(async (value, { req }) => {
+      const user = await User.findOne({ email: value });
+      if (user) {
+        throw new Error(req.t('errors.validation.emailUniqueCheck'));
+      } else {
+        return true;
+      }
     }),
   check('weight')
     .optional()

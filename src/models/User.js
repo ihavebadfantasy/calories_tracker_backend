@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const mongoose_delete = require('mongoose-delete');
-// TODO: replace age with date of birth
 
+// TODO: replace age with date of birth
 const StatsSchema = {
   averageWeight: {
     type: Number,

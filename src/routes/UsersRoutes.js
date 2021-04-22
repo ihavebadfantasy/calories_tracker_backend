@@ -3,6 +3,7 @@ const validate = require('../middleware/validation/validate');
 const createUserValidations = require('../middleware/validation/createUserValidations');
 const confirmEmailValidations = require('../middleware/validation/confirmEmailValidations');
 const updatePasswordValidations = require('../middleware/validation/updatePasswordValidations');
+const updateUserValidations = require('../middleware/validation/updateUserValidations');
 
 module.exports = (app) => {
   app.get(
@@ -11,6 +12,7 @@ module.exports = (app) => {
   );
   app.put(
     '/api/users',
+    validate(updateUserValidations),
     UsersController.updateOne
   );
   app.post(
