@@ -17,7 +17,7 @@ switch (process.env.NODE_ENV) {
     break;
   case 'prod':
     mongoose.connect(
-      `mongodb://localhost/${process.env.PROD_DB_NAME}`,
+      process.env.MONGODB_URL,
       config.mongoose.connection
     );
     break;

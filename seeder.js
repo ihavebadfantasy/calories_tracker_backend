@@ -9,7 +9,7 @@ switch (process.env.NODE_ENV) {
     database += process.env.TEST_DB_NAME;
     break;
   case 'prod':
-    database += process.env.PROD_DB_NAME;
+    database = process.env.MONGODB_URL;
     break;
   case 'dev':
     database += process.env.DEV_DB_NAME;
