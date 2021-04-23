@@ -14,7 +14,7 @@
 			"passwordConfirmationRequiredValidation": "Подтверждение пароля обязательно и должно совпадать с паролем",
 			"emailFormatCheck": "Почта должна быть настоящим email-адресом",
 			"daysIdsNotEmptyArrCheck": "Должен быть выбран хотя бы один день для изменения статистики",
-			"refreshTokenCheck": "Нет токена - нет рефреша",
+			"refreshTokenCheck": "Нет токена - нет рефреша ;(",
 			"oldPasswordCheck": "Неверный пароль"
 		},
 		"response": {
