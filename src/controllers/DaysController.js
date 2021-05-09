@@ -83,7 +83,7 @@ module.exports = {
         await updateUserStats(user);
       }
 
-      const updatedDay = await Day.findOne({ _id: dayId, userId });
+      const updatedDay = await Day.findOne({ _id: dayId, userId }).populate(['dailyActivities', 'meals']);;
 
       res.send({
         data: {
