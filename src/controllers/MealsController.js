@@ -19,6 +19,9 @@ module.exports = {
     if (req.body.nutriment) {
       mealProps.nutriment = req.body.nutriment;
     }
+    if (req.body.weight) {
+      mealProps.weight = req.body.weight;
+    }
 
     try {
       // saving dailyActivity itself
