@@ -100,7 +100,7 @@ module.exports = {
 
         const activityDay = await loadDayForUserByTimestamp(userId, dailyActivity.createdAt);
 
-        const newCaloriesLeft = activityDay.caloriesLeft - prevActivityCalories + dailyActivityProps.calories;
+        const newCaloriesLeft = activityDay.caloriesLeft - prevActivityCalories + parseInt(dailyActivityProps.calories);
 
         const activityUpdate = dailyActivity.update(dailyActivityProps);
         const dayUpdate = activityDay.update({
