@@ -51,7 +51,9 @@ module.exports = {
 
     try {
       await createTodayForUser(userId, res);
-    } catch (e) {
+      throw new Error();
+      res.status(201).send();
+    } catch (err) {
       next(generateCustomErr(req.t('errors.response.saveErr'), err.message));
     }
   },
