@@ -53,13 +53,9 @@ module.exports = {
 
   async updateOne(req, res, next) {
     let updatedMeal;
-
     const mealId = req.params.id;
-
     const userId = req.user.id;
-
     const mealProps = {};
-
     let isCaloriesUpdated = false;
 
     // adding optional properties

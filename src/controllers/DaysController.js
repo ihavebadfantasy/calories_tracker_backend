@@ -3,6 +3,7 @@ const User = require('../models/User');
 const updateUserStats = require('../tracker/updateUserStats');
 const wrapErrorResponse = require('../helpers/wrapErrorResponse');
 const generateCustomErr = require('../helpers/generateCustomError');
+const createTodayForUser = require('../helpers/createTodayForUser');
 
 module.exports = {
   async getAll(req, res, next) {
@@ -42,6 +43,16 @@ module.exports = {
       });
     } catch (err) {
       next(generateCustomErr(req.t('errors.response.dayLoadErr'), err.message));
+    }
+  },
+
+  async createToday(req, res, next) {
+    const userId = req.user.id;
+
+    try {
+      await createTodayForUser(userId, res);
+    } catch (e) {
+      next(generateCustomErr(req.t('errors.response.saveErr'), err.message));
     }
   },
 

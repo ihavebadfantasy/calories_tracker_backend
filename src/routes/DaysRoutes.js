@@ -21,4 +21,8 @@ module.exports = (app) => {
     validate(updateManyDaysValidation),
     DaysController.updateMany
   );
+  app.post(
+    '/api/days/today',
+    DaysController.createToday
+  );
 };
