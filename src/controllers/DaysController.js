@@ -50,8 +50,7 @@ module.exports = {
     const userId = req.user.id;
 
     try {
-      // await createTodayForUser(userId, res);
-      throw new Error();
+      await createTodayForUser(userId, res);
       res.status(201).send();
     } catch (err) {
       next(generateCustomErr(req.t('errors.response.saveErr'), err.message));
