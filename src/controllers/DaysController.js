@@ -50,7 +50,7 @@ module.exports = {
     const userId = req.user.id;
 
     try {
-      await createTodayForUser(userId, res);
+      // await createTodayForUser(userId, res);
       throw new Error();
       res.status(201).send();
     } catch (err) {
