@@ -13,7 +13,7 @@ module.exports = [
   },
   {
     name: 'Езда на велосипеде(10 км/час)',
-    caloriesPerMin: 0.1,
+    caloriesPerMin: 0.07,
   },
   {
     name: 'Езда на велосипеде(20 км/час)',
@@ -29,18 +29,18 @@ module.exports = [
   },
   {
     name: 'Ходьба',
-    caloriesPerMin: 0.1,
-  },
-  {
-    name: 'Плавание',
-    caloriesPerMin: 0.1,
-  },
-  {
-    name: 'Стретчинг',
     caloriesPerMin: 0.05,
   },
   {
+    name: 'Плавание',
+    caloriesPerMin: 0.06,
+  },
+  {
+    name: 'Стретчинг',
+    caloriesPerMin: 0.04,
+  },
+  {
     name: 'Упражнения со своим весом',
-    caloriesPerMin: 0.1,
+    caloriesPerMin: 0.06,
   }
 ]

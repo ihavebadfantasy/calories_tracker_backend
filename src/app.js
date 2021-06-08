@@ -1,4 +1,6 @@
 const express = require('express');
+const favicon = require('express-favicon');
+const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors')
@@ -29,6 +31,9 @@ switch (process.env.NODE_ENV) {
 }
 
 const app = express();
+app.use(favicon(process.cwd() + '/public/favicon.ico'));
+app.use(express.static(path.join(process.cwd(), 'public')));
+console.log(path.join(process.cwd(), 'public'));
 
 app.use(cors())
 app.use(i18n.init);
